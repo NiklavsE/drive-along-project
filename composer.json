@@ -1,6 +1,6 @@
 {
-    "name": "Laravel React To Do App",
-    "description": "Example to-do app built with Laravel and React.",
+    "name": "Drive Along project",
+    "description": "MVP Co-driving app built with Laravel and React.",
     "license": "MIT",
     "type": "project",
     "require": {
