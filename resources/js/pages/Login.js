@@ -111,7 +111,6 @@ class Login extends Component {
           <div className="container">
             <div className="row">
               <div className="section-login col-lg-6 ml-auto mr-auto">
-                <h4>Log in to the App</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">

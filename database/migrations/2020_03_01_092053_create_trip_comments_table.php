@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateTodosTable extends Migration
+class CreateTripCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateTodosTable extends Migration
      */
     public function up()
     {
-        Schema::create('todos', function (Blueprint $table) {
-            $table->timestamps();
+        Schema::create('trip_comments', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('trip_id');
             $table->integer('user_id');
-            $table->string('value');
-            $table->enum('status', ['open', 'closed'])->default('open');
+            $table->string('text');
+            $table->timestamps();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateTodosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('todos');
+        Schema::dropIfExists('trip_comments');
     }
 }

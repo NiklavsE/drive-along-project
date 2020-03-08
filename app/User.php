@@ -7,7 +7,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
 use App\Custom\Hasher;
-use App\Todo;
+use App\Trip;
+use App\TripComment;
+use App\TripPassenger;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -19,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password'
+        'name','surname', 'email', 'password'
     ];
 
     /**
@@ -39,13 +41,33 @@ class User extends Authenticatable implements JWTSubject
     public $appends = ['hashid'];
 
     /**
-     * A User can have multiple Todos.
+     * A User can have multiple Trips.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function todos()
+    public function trips()
     {
-        return $this->hasMany(Todo::class);
+        return $this->hasMany(Trip::class);
+    }
+
+    /**
+     * A User can have multiple comments on multiple comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(TripComment::class);
+    }
+
+    /**
+     * A User can be a passenger in multiple Trips.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function passenger()
+    {
+        return $this->hasMany(TripPassenger::class);
     }
 
     /**
