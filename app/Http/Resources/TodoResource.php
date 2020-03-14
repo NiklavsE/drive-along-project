@@ -20,8 +20,8 @@ class TodoResource extends ApiResource
             'updated_at' => (string)$this->updated_at->toDateTimeString(),
             'id' => $this->id,
             'user' => Hasher::encode($this->user_id),
-            'value' => $this->value,
-            'status' => $this->status,
+            'from' => $this->from,
+            'to' => $this->to
         ];
     }
 }

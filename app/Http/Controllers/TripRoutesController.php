@@ -9,9 +9,9 @@ use App\Custom\Hasher;
 use App\Http\Controllers\APIController;
 use App\Http\Resources\TodoCollection;
 use App\Http\Resources\TodoResource;
-use App\Todo;
+use App\TripRoute;
 
-class TodoController extends ApiController
+class TripRoutesController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -21,25 +21,11 @@ class TodoController extends ApiController
     public function index(Request $request)
     {
         // Get user from $request token.
-        if (! $user = auth()->setRequest($request)->user()) {
+        if (!$user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
 
-        $collection = Todo::where('user_id', $user->id);
-
-        // Check query string filters.
-        if ($status = $request->query('status')) {
-            if ('open' === $status || 'closed' === $status) {
-                $collection = $collection->where('status', $status);
-            }
-        }
-
-        $collection = $collection->latest()->paginate();
-
-        // Appends "status" to pagination links if present in the query.
-        if ($status) {
-            $collection = $collection->appends('status', $status);
-        }
+        $collection = TripRoute::all();
 
         return new TodoCollection($collection);
     }

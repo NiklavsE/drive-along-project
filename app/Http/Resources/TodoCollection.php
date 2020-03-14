@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Todo;
 use App\Http\Resources\ApiResourceCollection;
 use App\Http\Resources\TodoResource;
+use App\TripRoute;
 
 class TodoCollection extends ApiResourceCollection
 {
@@ -17,7 +18,7 @@ class TodoCollection extends ApiResourceCollection
     public function toArray($request)
     {
         // Transforms the collection to match format in TodoResource.
-        $this->collection->transform(function (Todo $todo) {
+        $this->collection->transform(function (TripRoute $todo) {
             return (new TodoResource($todo));
         });
 

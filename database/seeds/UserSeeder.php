@@ -13,7 +13,8 @@ class UserSeeder extends Seeder
     {
         // Create primary user account for testing.
         User::create([
-            'name' => 'User Test',
+            'name' => 'User',
+            'surname' => 'Test',
             'email' => 'user@test.dev',
             'password' => bcrypt('password')
         ]);
