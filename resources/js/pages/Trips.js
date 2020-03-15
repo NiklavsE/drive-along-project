@@ -9,7 +9,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -23,20 +22,24 @@ class Dashboard extends Component {
 
     // Initial state.
     this.state = {
+      trips: [],
       error: false,
-      data: []
     };
 
     // API endpoint.
-    this.api = "/api/v1/routes";
+    this.api = "/api/v1/trips";
   }
 
   componentDidMount() {
-    Http.get(`${this.api}`)
+
+    const { tripRoute } = this.props.location.state;
+    console.log(tripRoute);
+    
+    Http.get(`${this.api}?trip_route=${tripRoute}`)
       .then(response => {
-        const { data } = response.data;
+        const { trips } = response.data;
         this.setState({
-          data,
+          trips,
           error: false
         });
       })
@@ -53,24 +56,27 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { data, error } = this.state;
-    let anchorRef = React.createRef();
+    const { trips, error } = this.state;
 
     return (
-      data.map(route => (
-        <Card className={this.props.classes} key = {route.id}>
+      trips.map(trip => (
+          <Card className={this.props.classes}>
+          <Link
+          key = {trip.id}
+          to={{
+            pathname: '/trip',
+            state: {
+              id: trip.id
+            }
+          }} />
           <CardActionArea>
             <CardContent>
-            <Link
-              to={{
-                pathname: "/trips",
-                state: { tripRoute: route.id }
-              }}
-            >
               <Typography gutterBottom variant="h5" component="h2">
-                {route.from} - {route.to}
+                {trip.startingPoint} - {trip.destination}
               </Typography>
-            </Link>
+              <Typography gutterBottom variant="h4" component="h2">
+                {trip.time }
+              </Typography>
             </CardContent>
           </CardActionArea>
         </Card>

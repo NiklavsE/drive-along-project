@@ -29,6 +29,7 @@ Route::group([
     'prefix' => 'v1'
 ], function ($router) {
     Route::apiResource('routes', 'TripRoutesController');
+    Route::apiResource('trips', 'TripController');
 });
 
 // Not Found
