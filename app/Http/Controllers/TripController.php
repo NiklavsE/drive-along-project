@@ -24,13 +24,13 @@ class TripController extends Controller
         // Get user from $request token.
         if (!$user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
-        }
+        } 
 
-        $trips = Trip::where('route_id', $route_id)->toArray();
+        $trips = Trip::where('route_id', $route_id)->get();
 
         return $trips;
     }
- 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -60,7 +60,8 @@ class TripController extends Controller
      */
     public function show($id)
     {
-        //
+        $test = 'asdasd';
+        return $test;
     }
 
     /**

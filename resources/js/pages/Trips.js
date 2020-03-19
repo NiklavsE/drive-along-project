@@ -22,7 +22,7 @@ class Dashboard extends Component {
 
     // Initial state.
     this.state = {
-      trips: [],
+      data: [],
       error: false,
     };
 
@@ -33,13 +33,13 @@ class Dashboard extends Component {
   componentDidMount() {
 
     const { tripRoute } = this.props.location.state;
-    console.log(tripRoute);
-    
-    Http.get(`${this.api}?trip_route=${tripRoute}`)
+
+    Http.get(`${this.api}/${tripRoute}`)
       .then(response => {
-        const { trips } = response.data;
+        const { data } = response.data;
+        console.log(response.data);
         this.setState({
-          trips,
+          data: data,
           error: false
         });
       })
@@ -56,10 +56,9 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { trips, error } = this.state;
-
+    const { data, error } = this.state;
     return (
-      trips.map(trip => (
+      data.map(trip => (
           <Card className={this.props.classes}>
           <Link
           key = {trip.id}

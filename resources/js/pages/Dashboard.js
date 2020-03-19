@@ -35,6 +35,7 @@ class Dashboard extends Component {
     Http.get(`${this.api}`)
       .then(response => {
         const { data } = response.data;
+        console.log(response.data);
         this.setState({
           data,
           error: false
