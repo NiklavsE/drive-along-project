@@ -30,7 +30,7 @@ class TripController extends Controller
 
         return response()->json($trips);
     }
- 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -60,7 +60,8 @@ class TripController extends Controller
      */
     public function show($id)
     {
-        //
+        $test = 'asdasd';
+        return $test;
     }
 
     /**
