@@ -35,6 +35,7 @@ class Dashboard extends Component {
     Http.get(`${this.api}`)
       .then(response => {
         const { data } = response.data;
+        console.log(data);
         this.setState({
           data,
           error: false
@@ -58,22 +59,24 @@ class Dashboard extends Component {
 
     return (
       data.map(route => (
-        <Card className={this.props.classes} key = {route.id}>
+        <Link
+        underline='none'
+        to={{
+          pathname: "/trips",
+          state: { tripRoute: route.id }
+        }}
+        key = {route.id}
+      >
+        <Card className={this.props.classes}>
           <CardActionArea>
             <CardContent>
-            <Link
-              to={{
-                pathname: "/trips",
-                state: { tripRoute: route.id }
-              }}
-            >
               <Typography gutterBottom variant="h5" component="h2">
                 {route.from} - {route.to}
               </Typography>
-            </Link>
             </CardContent>
           </CardActionArea>
         </Card>
+        </Link>
       ))
     );
   }

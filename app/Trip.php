@@ -16,6 +16,7 @@ class Trip extends Model
         'destination',
         'time',
         'trip_route_id',
+        'passenger_count'
     ];
 
     /**
@@ -56,5 +57,14 @@ class Trip extends Model
     public function passengers()
     {
         return $this->hasMany(TripPassenger::class);
+    }
+
+    /**
+     * 
+     * 
+     */
+    public function decrementPassangerCount() 
+    {
+        $this->passanger_count--;
     }
 }

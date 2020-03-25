@@ -3,34 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use App\Custom\Hasher;
-use App\Http\Controllers\APIController;
-use App\Http\Resources\TodoCollection;
-use App\Http\Resources\TodoResource;
+use App\Services\TripPassengerService;
 use App\Trip;
-use App\TripPassenger;
 
-class TripController extends Controller
+class TripPassengerController extends Controller
 {
+
+    protected $passenger_service;
+
+    public function __construct(TripPassengerService $passenger_service)
+    {
+        $this->passenger_service = $passenger_service;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index($route_id, Request $request)
+    public function index()
     {
-        // Get user from $request token.
-        if (!$user = auth()->setRequest($request)->user()) {
-            return $this->responseUnauthorized();
-        }
-        $trips = Trip::where('route_id', $route_id)->get()->toArray();
-
-        return response()->json($trips);
+        //
     }
- 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -38,7 +33,7 @@ class TripController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -47,9 +42,20 @@ class TripController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $trip_id)
     {
-        //
+        // Get user from $request token.
+        if (! $user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        $user = auth()->setRequest($request)->user();
+
+        $passenger_added = $this->passenger_service->addPassenger($trip_id, $user->id);
+
+        return response()->json([
+            'error' => $passenger_added ? false : true
+        ]);
     }
 
     /**
