@@ -23,7 +23,7 @@ class Dashboard extends Component {
 
     // Initial state.
     this.state = {
-      data: [],
+      trips: [],
       error: false,
       errorMessage: '',
     };
