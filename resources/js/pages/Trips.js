@@ -11,6 +11,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+
 const useStyles = makeStyles({
   root: {
     maxWidth: 200
@@ -23,7 +26,7 @@ class Dashboard extends Component {
 
     // Initial state.
     this.state = {
-      data: [],
+      trips: [],
       error: false,
       errorMessage: '',
     };
@@ -60,7 +63,6 @@ class Dashboard extends Component {
 
 
   componentDidMount() {
-
     const { tripRoute } = this.props.location.state;
     
     Http.get(`${this.api}/${tripRoute}`)
@@ -88,6 +90,7 @@ class Dashboard extends Component {
     return (
       trips.map(trip => (
           <Card className={this.props.classes} key = {trip.id} onClick={() => this.addPassenger(trip.id)}>
+          <Alert severity="error">{this.props.errorMessage}</Alert>
           <CardActionArea>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
