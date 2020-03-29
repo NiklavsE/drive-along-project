@@ -30,7 +30,7 @@ class Header extends Component {
             <Nav>
               <NavItem>
                 <NavLink tag={Link} to="/archive">
-                  Archive
+                  Mani braucieni
                 </NavLink>
               </NavItem>
               <UncontrolledDropdown nav inNavbar>

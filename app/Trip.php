@@ -67,4 +67,13 @@ class Trip extends Model
     {
         $this->passanger_count--;
     }
+
+    /**
+     * 
+     * 
+     */
+    public function incrementPassengerCount()
+    {
+        $this->$passenger_count++;
+    }
 }

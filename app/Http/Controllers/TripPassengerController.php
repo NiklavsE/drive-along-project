@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\TripPassengerService;
 use App\Trip;
+use App\TripPassenger;
 
 class TripPassengerController extends Controller
 {
@@ -23,7 +24,12 @@ class TripPassengerController extends Controller
      */
     public function index()
     {
-        //
+         // Get user from $request token.
+         if (! $user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        TripPassenger
     }
 
     /**
