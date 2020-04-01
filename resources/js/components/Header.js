@@ -29,7 +29,7 @@ class Header extends Component {
           <div className="navigation d-flex justify-content-end">
             <Nav>
               <NavItem>
-                <NavLink tag={Link} to="/archive">
+                <NavLink tag={Link} to="/my-trips">
                   Mani braucieni
                 </NavLink>
               </NavItem>

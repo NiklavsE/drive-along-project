@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-class Trips extends Component {
+class MyTrips extends Component {
   constructor(props) {
     super(props);
 
@@ -32,40 +32,12 @@ class Trips extends Component {
     };
 
     // API endpoint.
-    this.api = "/api/v1/trips";
+    this.api = "/api/v1/user-trips";
   }
-
-  addPassenger = (key) => {
-    let updatedTrips = this.state.trips;
-    Http.post(`/api/v1/trip-passenger/${key}`)
-      .then(response => {
-        if (response.data.error == false) {
-          updatedTrips.map(trip => {
-            if (trip.id == key) {
-              trip.passangerCount--;
-            }
-          });
-          this.setState({
-            trips: updatedTrips
-          });
-        } else {
-          this.setState({
-            errorMessage: 'Trip passanger count limit reached!'
-          });
-        }
-      })
-      .catch(() => {
-        this.setState({
-          error: "Sorry, there was an error joining a trip"
-        });
-      });
-  }
-
 
   componentDidMount() {
-    const { tripRoute } = this.props.location.state;
     
-    Http.get(`${this.api}/${tripRoute}`)
+    Http.get(`${this.api}`)
       .then(response => {
         this.setState({
           trips: response.data.map(trip => ({
@@ -73,7 +45,9 @@ class Trips extends Component {
               destination: trip.destination,
               time: trip.time,
               id: trip.id,
-              passangerCount: trip.passanger_count
+              passangerCount: trip.passanger_count,
+              driver: trip.driver,
+              comments: trip.comments
             })
           )
         })
@@ -89,8 +63,7 @@ class Trips extends Component {
     const { trips, errorMessage } = this.state;
     return (
       trips.map(trip => (
-          <Card className={this.props.classes} key = {trip.id} onClick={() => this.addPassenger(trip.id)}>
-          <Alert severity="error">{this.props.errorMessage}</Alert>
+          <Card className={this.props.classes} key = {trip.id}>
           <CardActionArea>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
@@ -102,6 +75,11 @@ class Trips extends Component {
               <Typography>
               Šobrīd brīvās vietas: {trip.passangerCount}
             </Typography>
+            trip.comments.map(comment => (
+              comment.author
+              comment.text
+              comment.timestamp
+            ));
             </CardContent>
           </CardActionArea>
         </Card>
@@ -115,4 +93,4 @@ const mapStateToProps = state => ({
   user: state.Auth.user
 });
 
-export default connect(mapStateToProps)(Trips);
+export default connect(mapStateToProps)(MyTrips);

@@ -6,19 +6,27 @@ use Illuminate\Http\Request;
 use App\Trip;
 use App\TripPassenger;
 use App\Services\TripPassengerService;
+use App\TripComment;
+use App\Repositories\TripCommentsRepository;
+use App\User;
 
 class UserTripController extends Controller
 {
 
     protected $passenger_service;
 
-    public function __construct(TripPassengerService $passenger_service)
+    protected $trip_comment_repository;
+
+    public function __construct(TripPassengerService $passenger_service, TripCommentsRepository $trip_comment_repository)
     {
         $this->passenger_service = $passenger_service;
+        $this->trip_comment_repository = $trip_comment_repository;
     }
 
     public function index(Request $request)
     {
+        $trips_array = array();
+
         // Get user from $request token.
         if (!$user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
@@ -28,8 +36,23 @@ class UserTripController extends Controller
         $user_trip_ids = TripPassenger::where('user_id', $user->id)->pluck('trip_id');
         $trips = Trip::whereIn('id', $user_trip_ids)->get();
 
+        $trip_comments = $this->trip_comment_repository->getTripComments($user_trip_ids);
 
-        return response()->json($trips);
+        foreach ($trips as $trip) {
+            $driver = User::Where('id', $trip->user_id)->first();
+
+            $trips_array[] = [
+                "starting_point" => $trip->starting_point,
+                "destination" => $trip->destination,
+                "time" => $trip->time,
+                "id" => $trip->id,
+                "passenger_count" => $trip->passanger_count,
+                "driver" => $driver->name . ' ' . $driver->surname,
+                "comments" => $trip_comments[$trip->id],
+            ];
+        }
+
+        return response()->json($trips_array);
     }
 
     public function destroy($trip_id, Request $request)
@@ -42,7 +65,7 @@ class UserTripController extends Controller
         $passenger_deleted = $this->passenger_service->removePassenger();
 
         return response()->json([
-            'error' => $passenger_added ? false : true
+            'error' => $passenger_deleted ? false : true
         ]);
     }
 }

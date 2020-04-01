@@ -7,6 +7,7 @@ import ResetPassword from "../pages/ResetPassword";
 import Archive from "../pages/Archive";
 import NoMatch from "../pages/NoMatch";
 import Trips from "../pages/Trips";
+import MyTrips from "../pages/MyTrips";
 
 const routes = [
   {
@@ -51,6 +52,12 @@ const routes = [
     exact: true,
     auth: true,
     component: Trips
+  },
+  {
+    path: "/my-trips",
+    exact: true,
+    auth: true,
+    component: MyTrips
   },
   {
     path: "",

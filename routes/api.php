@@ -30,7 +30,8 @@ Route::group([
 ], function ($router) {
     Route::apiResource('routes', 'TripRoutesController');
     Route::get('trips/{route_id}', 'TripController@index');
-    Route::post('tripPassenger/{trip_id}', 'TripPassengerController@store');
+    Route::post('trip-passenger/{trip_id}', 'TripPassengerController@store');
+    Route::get('user-trips', 'UserTripController@index');
 });
 
 // Not Found
