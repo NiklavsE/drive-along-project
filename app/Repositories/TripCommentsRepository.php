@@ -27,9 +27,10 @@ class TripCommentsRepository
                     $user = User::where('id', $comment->user_id)->first();
     
                     $comment_array[$trip][] = [
+                        'id' => $comment->id,
                         'text' => $comment->text,
                         'author' => $user->name . ' ' . $user->surname,
-                        'timestamp' => $comment->created_at,
+                        'timestamp' => $comment->created_at->format('d-m-y h:i:s'),
                     ];
                 }
             }
