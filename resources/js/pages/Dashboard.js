@@ -54,6 +54,7 @@ class Dashboard extends Component {
 
   render() {
     const { data, error } = this.state;
+    console.log(this.state);
     let anchorRef = React.createRef();
 
     return (

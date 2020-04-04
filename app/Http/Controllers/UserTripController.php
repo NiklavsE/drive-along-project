@@ -48,7 +48,7 @@ class UserTripController extends Controller
                 "id" => $trip->id,
                 "passenger_count" => $trip->passanger_count,
                 "driver" => $driver->name . ' ' . $driver->surname,
-                "comments" => $trip_comments[$trip->id],
+                "comments" => isset($trip_comments[$trip->id]) ? $trip_comments[$trip->id] : [],
             ];
         }
 

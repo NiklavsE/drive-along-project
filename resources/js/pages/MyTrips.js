@@ -10,6 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import CommentList from "../components/CommentList";
 
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -45,9 +46,9 @@ class MyTrips extends Component {
               destination: trip.destination,
               time: trip.time,
               id: trip.id,
-              passangerCount: trip.passanger_count,
+              passangerCount: trip.passenger_count,
               driver: trip.driver,
-              comments: trip.comments
+              comments: trip.comments,
             })
           )
         })
@@ -61,7 +62,8 @@ class MyTrips extends Component {
 
   render() {
     const { trips, errorMessage } = this.state;
-    return (
+    return trips.length
+    ? (
       trips.map(trip => (
           <Card className={this.props.classes} key = {trip.id}>
           <CardActionArea>
@@ -75,16 +77,12 @@ class MyTrips extends Component {
               <Typography>
               Šobrīd brīvās vietas: {trip.passangerCount}
             </Typography>
-            trip.comments.map(comment => (
-              comment.author
-              comment.text
-              comment.timestamp
-            ));
+            <CommentList comments={trip.comments} />
             </CardContent>
           </CardActionArea>
         </Card>
       ))
-    );
+    ) : null;
   }
 }
 
