@@ -28,8 +28,6 @@ class TripPassengerController extends Controller
          if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
-
-        TripPassenger
     }
 
     /**
@@ -57,10 +55,12 @@ class TripPassengerController extends Controller
 
         $user = auth()->setRequest($request)->user();
 
-        $passenger_added = $this->passenger_service->addPassenger($trip_id, $user->id);
+        $passenger_added = $this->passenger_service->addPassenger((int)$trip_id, $user->id);
 
         return response()->json([
-            'error' => $passenger_added ? false : true
+            'error' => $passenger_added ? false : true,
+            'error_id' => !$passenger_added ? (int)$trip_id : '',
+            'success_id' => $passenger_added ? (int)$trip_id : '',
         ]);
     }
 

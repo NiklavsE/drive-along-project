@@ -12,7 +12,9 @@ class TripPassengerService
 
         if ($trip->passanger_count != 0) {
             $trip->decrementPassangerCount();
-            $trip_passenger = new TripPassenger($trip_id, $user_id);
+            $trip_passenger = new TripPassenger();
+            $trip_passenger->trip_id = $trip_id;
+            $trip_passenger->user_id = $user_id;
         } else {
             return false;
         }
