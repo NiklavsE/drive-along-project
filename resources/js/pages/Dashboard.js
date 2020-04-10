@@ -10,6 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import Pace from 'react-pace-progress';
 
 const useStyles = makeStyles({
   root: {
@@ -24,7 +25,8 @@ class Dashboard extends Component {
     // Initial state.
     this.state = {
       error: false,
-      data: []
+      data: [],
+      isLoadingRoutes: true,
     };
 
     // API endpoint.
@@ -39,6 +41,7 @@ class Dashboard extends Component {
           data,
           error: false
         });
+        this.setState({isLoadingRoutes: false})
       })
       .catch(() => {
         this.setState({
@@ -58,6 +61,9 @@ class Dashboard extends Component {
     let anchorRef = React.createRef();
 
     return (
+      <div>
+      {this.state.isLoadingRoutes ? 
+        (<Pace color="#0066ff"/>) : (
       data.map(route => (
         <Link
         underline='none'
@@ -78,6 +84,8 @@ class Dashboard extends Component {
         </Card>
         </Link>
       ))
+      )}
+      </div>
     );
   }
 }

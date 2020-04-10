@@ -26,7 +26,10 @@ class TripController extends Controller
         if (!$user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
-        $trips = Trip::where('route_id', $route_id)->get()->toArray();
+        $trips = Trip::where('route_id', $route_id)
+        ->where('passanger_count', '<>', '0')
+        ->get()
+        ->toArray();
 
         return response()->json($trips);
     }
