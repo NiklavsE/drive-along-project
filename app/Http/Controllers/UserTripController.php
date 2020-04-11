@@ -10,7 +10,7 @@ use App\TripComment;
 use App\Repositories\TripCommentsRepository;
 use App\User;
 
-class UserTripController extends Controller
+class UserTripController extends ApiController
 {
 
     protected $passenger_service;
@@ -36,7 +36,7 @@ class UserTripController extends Controller
         $user_trip_ids = TripPassenger::where('user_id', $user->id)->pluck('trip_id');
         $trips = Trip::whereIn('id', $user_trip_ids)->get();
 
-        $trip_comments = $this->trip_comment_repository->getTripComments($user_trip_ids);
+        $trip_comments = $this->trip_comment_repository->getMappedTripComments($user_trip_ids);
 
         foreach ($trips as $trip) {
             $driver = User::Where('id', $trip->user_id)->first();

@@ -51,13 +51,15 @@ const routes = [
     path: "/trips",
     exact: true,
     auth: true,
-    component: Trips
+    component: Trips,
+    fallback: Home
   },
   {
     path: "/my-trips",
     exact: true,
     auth: true,
-    component: MyTrips
+    component: MyTrips,
+    fallback: Home
   },
   {
     path: "",

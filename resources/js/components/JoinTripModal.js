@@ -54,21 +54,6 @@ class JoinTripModal extends Component {
         </Fade>
       </Modal>
     </div>
-
-
-      // <div className="backdrop" style={{backdropStyle}}>
-      //   <div className="JoinTripModal" style={{modalStyle}}>
-      //     SUKA BLE PARĀDIES
-      //     <button onClick={this.props.addPassenger}>
-      //     Apstiprināt
-      //     </button>
-      //     <div className="footer">
-      //       <button onClick={this.props.onClose}>
-      //         Aizvērt
-      //       </button>
-      //     </div>
-      //   </div>
-      // </div>
     );
   }
 }

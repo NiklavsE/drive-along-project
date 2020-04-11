@@ -7,11 +7,11 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import CommentList from "../components/CommentList";
-
+import AddComment from "../components/AddComment";
+import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 
@@ -37,27 +37,49 @@ class MyTrips extends Component {
   }
 
   componentDidMount() {
-    
     Http.get(`${this.api}`)
-      .then(response => {
-        this.setState({
-          trips: response.data.map(trip => ({
-              startingPoint: trip.starting_point,
-              destination: trip.destination,
-              time: trip.time,
-              id: trip.id,
-              passangerCount: trip.passenger_count,
-              driver: trip.driver,
-              comments: trip.comments,
-            })
-          )
-        })
+    .then(response => {
+      this.setState({
+        trips: response.data.map(trip => ({
+            startingPoint: trip.starting_point,
+            destination: trip.destination,
+            time: trip.time,
+            id: trip.id,
+            passangerCount: trip.passenger_count,
+            driver: trip.driver,
+            comments: trip.comments,
+          })
+        )
       })
-      .catch(() => {
-        this.setState({
-          error: "Unable to fetch data."
-        });
+    })
+    .catch(() => {
+      this.setState({
+        error: "Unable to fetch data."
       });
+    });
+  }
+
+  loadComments(tripId) {
+
+    let updatedTrips = this.state.trips;
+
+    Http.get(`api/v1/comments/${tripId}`)
+    .then(response => {
+      updatedTrips.map(trip => {
+        if (trip.id == tripId) {
+          trip.comments = response.data.comments;
+        }
+
+        this.setState({
+          trips: updatedTrips
+        })
+      });
+    })
+    .catch(() => {
+      this.setState({
+        error: "Unable to fetch data."
+      });
+    });
   }
 
   render() {
@@ -65,22 +87,21 @@ class MyTrips extends Component {
     return trips.length
     ? (
       trips.map(trip => (
-          <Card className={this.props.classes} key = {trip.id}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {trip.startingPoint} - {trip.destination}
-              </Typography>
-              <Typography gutterBottom variant="h4" component="h2">
-                {trip.time }
-              </Typography>
-              <Typography>
-              Šobrīd brīvās vietas: {trip.passangerCount}
-            </Typography>
-            <CommentList comments={trip.comments} />
-            </CardContent>
-          </CardActionArea>
-        </Card>
+        <Paper style={{ padding: "40px 20px", margin: "10px" }} key={trip.id}>
+        <Grid container wrap="nowrap">
+          <Grid item>
+          <h4 style={{ margin: 0, textAlign: "left" }}> {trip.startingPoint} - {trip.destination} </h4>
+          </Grid>
+        </Grid>
+        <Grid justifycontent="left" item xs zeroMinWidth>
+          Šobrīd brīvās vietas: {trip.passangerCount}
+        </Grid>
+        <Grid justifycontent="left" item xs zeroMinWidth>
+        Komentāri:
+        </Grid>
+        <CommentList comments={trip.comments} />
+        <AddComment trip={trip.id} loadComments={() => this.loadComments(trip.id)}/>
+        </Paper>
       ))
     ) : null;
   }
