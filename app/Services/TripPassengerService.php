@@ -35,13 +35,18 @@ class TripPassengerService
 
     public function removePassenger($trip_id, $user_id)
     {   
-        $deleted_trip_passenger_records = TripPassenger::where('user_id', $user_id)->delete();
+        $deleted_trip_passenger_records = TripPassenger::where(
+            array(
+                'user_id' => $user_id, 
+                'trip_id' => $trip_id
+            )
+        )->delete();
 
         $trip = Trip::where('id', $trip_id)->first();
         $trip->incrementPassengerCount();
         $trip->save();
 
-        return;
+        return true;
     }
 
     public function passengerValidation($trip_id, $user_id)

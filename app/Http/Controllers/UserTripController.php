@@ -62,7 +62,7 @@ class UserTripController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        $passenger_deleted = $this->passenger_service->removePassenger();
+        $passenger_deleted = $this->passenger_service->removePassenger($trip_id, $user->id);
 
         return response()->json([
             'error' => $passenger_deleted ? false : true
