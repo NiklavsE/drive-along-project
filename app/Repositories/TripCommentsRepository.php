@@ -15,7 +15,7 @@ class TripCommentsRepository
      * @return array $comment_array
      */
 
-    public function getTripComments($trips)
+    public function getMappedTripComments($trips)
     {
         $comment_array = array();
 
@@ -33,6 +33,28 @@ class TripCommentsRepository
                         'timestamp' => $comment->created_at->format('d-m-y h:i:s'),
                     ];
                 }
+            }
+        }
+
+        return $comment_array;
+    }
+
+    public function getTripComments($trip_id)
+    {
+        $comment_array = array();
+
+        $comments = TripComment::where('trip_id', $trip_id)->get();
+
+        if (isset($comments)) {
+            foreach ($comments as $comment) {
+                $user = User::where('id', $comment->user_id)->first();
+
+                $comment_array[] = [
+                    'id' => $comment->id,
+                    'text' => $comment->text,
+                    'author' => $user->name . ' ' . $user->surname,
+                    'timestamp' => $comment->created_at->format('d-m-y h:i:s'),
+                ];
             }
         }
 

@@ -10,6 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
+import Pace from 'react-pace-progress'
 
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
@@ -44,10 +45,13 @@ class Trips extends Component {
       trips: [],
       error: false,
       errorMessage: '',
-      errorId: '',
-      successId: '',
+      tripFullId: null,
+      isalreadyJoinedId: null,
+      successId: null,
+      alreadyJoinedErrorId: null,
       isJoinTripModalOpen: false,
       joinTripModalTripId: null,
+      isLoadingTrips: true,
     };
 
     // API endpoint.
@@ -76,20 +80,31 @@ class Trips extends Component {
         if (response.data.error == false) {
           updatedTrips.map(trip => {
             if (trip.id == key) {
-              trip.passangerCount--;
+              trip.passengerCount--;
             }
           });
           this.setState({
             trips: updatedTrips,
-            successId: response.data.success_id,
-            errorId: '',
+            successId: response.data.success,
+            isalreadyJoined: null,
+            tripFullId: null
           });
+          this.closeJoinTripModal();
         } else {
-          this.setState({
-            errorMessage: 'Trip passanger count limit reached!',
-            errorId: response.data.error_id,
-            successId: '',
-          });
+          if (response.data.tripFull != '') {
+            this.setState({
+              tripFullId: response.data.tripFull,
+              successId: null,
+              isalreadyJoined: null
+            });
+          } else if (response.data.isalreadyJoined != '') { 
+            this.setState({
+              tripFullId: null,
+              successId: null,
+              isalreadyJoinedId: response.data.isalreadyJoined
+            });
+          }
+          this.closeJoinTripModal();
         }
       })
       .catch(() => {
@@ -97,7 +112,6 @@ class Trips extends Component {
           error: "Sorry, there was an error joining a trip"
         });
       });
-      this.closeJoinTripModal();
   }
 
 
@@ -112,10 +126,11 @@ class Trips extends Component {
               destination: trip.destination,
               time: trip.time,
               id: trip.id,
-              passangerCount: trip.passanger_count
+              passengerCount: trip.passenger_count
             })
           )
         })
+        this.setState({isLoadingTrips: false})
       })
       .catch(() => {
         this.setState({
@@ -125,16 +140,21 @@ class Trips extends Component {
   }
 
   render() {
+
     const { classes } = this.props;
     const { trips, errorMessage } = this.state;
+    const { isLoadingTrips } = this.state
 
     return (
-      trips.map(trip => (
+      <div>
+      {this.state.isLoadingTrips ? 
+        (<Pace color="#0066ff"/>) : (
+          trips.map(trip => (
           <Card className={classes.root} key = {trip.id}>
-
           
-          { this.state.errorId == trip.id && <Alert severity="error">Pasažieru skaita limits ir sasniegts!</Alert> }
+          { this.state.tripFullId == trip.id && <Alert severity="error">Pasažieru skaita limits ir sasniegts!</Alert> }
           { this.state.successId == trip.id && <Alert severity="success">Esat veiksmīgi pievienojies braucienam! Dodaties uz "Mani braucieni" sadaļu, lai uzzinātu vairāk!</Alert> }
+          { this.state.isalreadyJoinedId == trip.id && <Alert severity="error">Jūs jau esat pievienojies šim braucienam!</Alert> }
 
           { this.state.joinTripModalTripId == trip.id && 
             <JoinTripModal 
@@ -152,7 +172,7 @@ class Trips extends Component {
                 {trip.time }
               </Typography>
               <Typography variant="body2" component="p">
-              Šobrīd brīvās vietas: {trip.passangerCount}
+              Šobrīd brīvās vietas: {trip.passengerCount}
             </Typography>
             </CardContent>
           <CardActions> 
@@ -162,6 +182,8 @@ class Trips extends Component {
         </CardActions>
         </Card>
       ))
+    )}
+    </div>
     );
   }
 }

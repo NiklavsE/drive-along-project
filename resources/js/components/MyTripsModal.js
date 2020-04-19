@@ -22,7 +22,7 @@ const useStyles = theme => ({
   },
 });
 
-class JoinTripModal extends Component {
+class MyTripsModal extends Component {
   render() {
     const { classes } = this.props;
 
@@ -48,8 +48,8 @@ class JoinTripModal extends Component {
         <Fade in={this.props.show}>
           <div className={classes.paper}>
             <h2 id="transition-modal-title">Paziņojums</h2>
-            <p id="transition-modal-description">Vai tiešām vēlaties pievienoties dotajam braucienam?</p>
-            <Button onClick={this.props.addPassenger}>Apstiprināt</Button>
+            <p id="transition-modal-description">{ this.props.text }</p>
+            <Button onClick={this.props.execute}>Apstiprināt</Button>
           </div>
         </Fade>
       </Modal>
@@ -58,10 +58,10 @@ class JoinTripModal extends Component {
   }
 }
 
-JoinTripModal.propTypes = {
+MyTripsModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   show: PropTypes.bool,
   children: PropTypes.node
 };
 
-export default withStyles(useStyles)(JoinTripModal);
+export default withStyles(useStyles)(MyTripsModal);

@@ -55,12 +55,13 @@ class TripPassengerController extends Controller
 
         $user = auth()->setRequest($request)->user();
 
-        $passenger_added = $this->passenger_service->addPassenger((int)$trip_id, $user->id);
+        $passenger_add = $this->passenger_service->addPassenger((int)$trip_id, $user->id);
 
         return response()->json([
-            'error' => $passenger_added ? false : true,
-            'error_id' => !$passenger_added ? (int)$trip_id : '',
-            'success_id' => $passenger_added ? (int)$trip_id : '',
+            'error' => $passenger_add != 'success' ? true : false,
+            'tripFull' => $passenger_add == 'trip_full' ? (int)$trip_id : '',
+            'success' => $passenger_add == 'success' ? (int)$trip_id : '',
+            'isalreadyJoined' => $passenger_add == 'is_already_joined' ? (int)$trip_id : ''
         ]);
     }
 

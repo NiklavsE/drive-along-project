@@ -8,6 +8,7 @@ import Archive from "../pages/Archive";
 import NoMatch from "../pages/NoMatch";
 import Trips from "../pages/Trips";
 import MyTrips from "../pages/MyTrips";
+import NewTrip from "../pages/NewTrip";
 
 const routes = [
   {
@@ -51,13 +52,22 @@ const routes = [
     path: "/trips",
     exact: true,
     auth: true,
-    component: Trips
+    component: Trips,
+    fallback: Home
   },
   {
     path: "/my-trips",
     exact: true,
     auth: true,
-    component: MyTrips
+    component: MyTrips,
+    fallback: Home
+  },
+  {
+    path: "/my-trips/new",
+    exact: true,
+    auth: true,
+    component: NewTrip,
+    fallback: Home
   },
   {
     path: "",
