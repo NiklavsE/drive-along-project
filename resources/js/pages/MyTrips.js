@@ -14,6 +14,8 @@ import AddComment from "../components/AddComment";
 import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import Button from '@material-ui/core/Button';
+import MyTripsModal from "../components/MyTripsModal"
 
 const useStyles = makeStyles({
   root: {
@@ -30,6 +32,8 @@ class MyTrips extends Component {
       trips: [],
       error: false,
       errorMessage: '',
+      isModalOpen: false,
+      modalTripId: null
     };
 
     // API endpoint.
@@ -37,6 +41,10 @@ class MyTrips extends Component {
   }
 
   componentDidMount() {
+    this.loadData();
+  }
+
+  loadData() {
     Http.get(`${this.api}`)
     .then(response => {
       this.setState({
@@ -45,7 +53,7 @@ class MyTrips extends Component {
             destination: trip.destination,
             time: trip.time,
             id: trip.id,
-            passangerCount: trip.passenger_count,
+            passengerCount: trip.passenger_count,
             driver: trip.driver,
             comments: trip.comments,
           })
@@ -82,19 +90,58 @@ class MyTrips extends Component {
     });
   }
 
+  openModal = (tripId) => {
+    this.setState({
+      isModalOpen: true,
+      modalTripId: tripId
+    });
+  }
+
+  closeModal = () => {
+    this.setState({
+      isModalOpen: false,
+      modalTripId: null
+    });
+  }
+
+  leaveTrip = (tripId) => {
+    Http.delete(`api/v1/user-trips/${tripId}`)
+    .then(response => {
+      this.loadData();
+    })
+    .catch(() => {
+      this.setState({
+        error: "Unable to fetch data."
+      });
+    });
+  }
+
   render() {
     const { trips, errorMessage } = this.state;
     return trips.length
     ? (
       trips.map(trip => (
         <Paper style={{ padding: "40px 20px", margin: "10px" }} key={trip.id}>
+        
+        { this.state.modalTripId == trip.id && 
+          <MyTripsModal
+            show={this.state.isModalOpen}
+            execute={() => this.leaveTrip(trip.id)}
+            onClose={() => this.closeModal()}
+            text={"Suka ble"}
+          />
+        }
+        
         <Grid container wrap="nowrap">
-          <Grid item>
+          <Grid item xs={10}>
           <h4 style={{ margin: 0, textAlign: "left" }}> {trip.startingPoint} - {trip.destination} </h4>
+          </Grid>
+          <Grid item xs={2} style={{ align: "right" }}>
+            <Button color="secondary" onClick={() => this.openModal(trip.id)}> Atteikties no brauciena </Button>
           </Grid>
         </Grid>
         <Grid justifycontent="left" item xs zeroMinWidth>
-          Šobrīd brīvās vietas: {trip.passangerCount}
+          Šobrīd brīvās vietas: {trip.passengerCount}
         </Grid>
         <Grid justifycontent="left" item xs zeroMinWidth>
         Komentāri:

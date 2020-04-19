@@ -27,7 +27,7 @@ class TripController extends Controller
             return $this->responseUnauthorized();
         }
         $trips = Trip::where('route_id', $route_id)
-        ->where('passanger_count', '<>', '0')
+        ->where('passenger_count', '<>', '0')
         ->get()
         ->toArray();
 

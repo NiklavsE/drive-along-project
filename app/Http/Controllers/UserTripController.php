@@ -39,14 +39,14 @@ class UserTripController extends ApiController
         $trip_comments = $this->trip_comment_repository->getMappedTripComments($user_trip_ids);
 
         foreach ($trips as $trip) {
-            $driver = User::Where('id', $trip->user_id)->first();
+            $driver = User::Where('id', $trip->driver_id)->first();
 
             $trips_array[] = [
                 "starting_point" => $trip->starting_point,
                 "destination" => $trip->destination,
                 "time" => $trip->time,
                 "id" => $trip->id,
-                "passenger_count" => $trip->passanger_count,
+                "passenger_count" => $trip->passenger_count,
                 "driver" => $driver->name . ' ' . $driver->surname,
                 "comments" => isset($trip_comments[$trip->id]) ? $trip_comments[$trip->id] : [],
             ];
@@ -66,6 +66,32 @@ class UserTripController extends ApiController
 
         return response()->json([
             'error' => $passenger_deleted ? false : true
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+        // Get user from $request token.
+        if (!$user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        $data = json_decode($request->getContent());
+
+        $time = new \DateTime($data->time);
+        $time = $time->format('Y-m-d h:m:s');
+
+        $trip = new Trip;
+        $trip->starting_point = $data->starting_point;
+        $trip->destination = $data->destination;
+        $trip->passenger_count = $data->passenger_count;
+        $trip->time = $time;
+        $trip->route_id = $data->route;
+        $trip->driver_id = $user->id;
+        $trip->save();
+
+        return response()->json([
+            "error" => false
         ]);
     }
 }

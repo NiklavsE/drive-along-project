@@ -80,7 +80,7 @@ class Trips extends Component {
         if (response.data.error == false) {
           updatedTrips.map(trip => {
             if (trip.id == key) {
-              trip.passangerCount--;
+              trip.passengerCount--;
             }
           });
           this.setState({
@@ -126,7 +126,7 @@ class Trips extends Component {
               destination: trip.destination,
               time: trip.time,
               id: trip.id,
-              passangerCount: trip.passanger_count
+              passengerCount: trip.passenger_count
             })
           )
         })
@@ -172,7 +172,7 @@ class Trips extends Component {
                 {trip.time }
               </Typography>
               <Typography variant="body2" component="p">
-              Šobrīd brīvās vietas: {trip.passangerCount}
+              Šobrīd brīvās vietas: {trip.passengerCount}
             </Typography>
             </CardContent>
           <CardActions> 

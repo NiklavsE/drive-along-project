@@ -16,7 +16,7 @@ class Trip extends Model
         'destination',
         'time',
         'trip_route_id',
-        'passanger_count'
+        'passenger_count'
     ];
 
     /**
@@ -63,9 +63,9 @@ class Trip extends Model
      * 
      * 
      */
-    public function decrementPassangerCount() 
+    public function decrementPassengerCount() 
     {
-        $this->passanger_count--;
+        $this->passenger_count--;
     }
 
     /**
@@ -74,6 +74,6 @@ class Trip extends Model
      */
     public function incrementPassengerCount()
     {
-        $this->passanger_count++;
+        $this->passenger_count++;
     }
 }

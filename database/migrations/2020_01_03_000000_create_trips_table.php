@@ -21,7 +21,7 @@ class CreatetripsTable extends Migration
             $table->integer('route_id');
             $table->string('destination');
             $table->string('starting_point');
-            $table->integer('passanger_count');
+            $table->integer('passenger_count');
             $table->dateTime('time', 0);
             $table->enum('status', ['open', 'closed'])->default('open');
         });

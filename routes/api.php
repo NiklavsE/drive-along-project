@@ -35,6 +35,7 @@ Route::group([
     Route::post('comment/{trip_id}', 'TripCommentController@store');
     Route::get('comments/{trip_id}', 'TripCommentController@index');
     Route::delete('user-trips/{trip_id}', 'UserTripController@destroy');
+    Route::post('user-trip', 'UserTripController@create');
 });
 
 // Not Found
