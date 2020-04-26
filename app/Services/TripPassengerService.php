@@ -21,7 +21,7 @@ class TripPassengerService
         $passenger_validation = $this->passengerValidation($trip_id, $user_id);
         
         if ($passenger_validation == 'success') {
-            $trip->decrementPassangerCount();
+            $trip->decrementPassengerCount();
             $trip_passenger = new TripPassenger();
             $trip_passenger->trip_id = $trip_id;
             $trip_passenger->user_id = $user_id;
@@ -54,7 +54,8 @@ class TripPassengerService
         $return_array = [
             'is_already_joined',
             'trip_full',
-            'success'
+            'success',
+            'not_allowed'
 
         ];
 
@@ -62,6 +63,8 @@ class TripPassengerService
             return $return_array[1];
         } else if ($this->passenger_repository->isalreadyJoinedAsPassenger($trip_id, $user_id)) {
             return $return_array[0];
+        } else if ($this->passenger_repository->isRestricted($trip_id, $user_id)) {
+            return $return_array[3];
         } else {
             return $return_array[2];
         }
