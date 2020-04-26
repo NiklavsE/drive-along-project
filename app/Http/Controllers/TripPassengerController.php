@@ -59,10 +59,7 @@ class TripPassengerController extends Controller
 
         return response()->json([
             'error' => $passenger_add != 'success' ? true : false,
-            'tripFull' => $passenger_add == 'trip_full' ? (int)$trip_id : '',
-            'success' => $passenger_add == 'success' ? (int)$trip_id : '',
-            'isalreadyJoined' => $passenger_add == 'is_already_joined' ? (int)$trip_id : '',
-            'notAllowed' => $passenger_add == 'not_allowed' ? (int)$trip_id : ''
+            'status' => $passenger_add
         ]);
     }
 

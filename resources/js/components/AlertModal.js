@@ -21,7 +21,7 @@ const useStyles = theme => ({
   },
 });
 
-class MyTripsModal extends Component {
+class AlertModal extends Component {
   render() {
     const { classes } = this.props;
 
@@ -48,7 +48,7 @@ class MyTripsModal extends Component {
           <div className={classes.paper}>
             <h2 id="transition-modal-title">Paziņojums</h2>
             <p id="transition-modal-description">{ this.props.text }</p>
-            <Button onClick={this.props.execute}>Apstiprināt</Button>
+            <Button onClick={this.props.execute}>Labi!</Button>
           </div>
         </Fade>
       </Modal>
@@ -57,10 +57,10 @@ class MyTripsModal extends Component {
   }
 }
 
-MyTripsModal.propTypes = {
+AlertModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   show: PropTypes.bool,
   children: PropTypes.node
 };
 
-export default withStyles(useStyles)(MyTripsModal);
+export default withStyles(useStyles)(AlertModal);

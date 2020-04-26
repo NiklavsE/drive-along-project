@@ -1,6 +1,6 @@
 import Home from "../pages/Home";
 import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
+import RoutesList from "../pages/RoutesList";
 import Register from "../pages/Register";
 import ForgotPassword from "../pages/ForgotPassword";
 import ResetPassword from "../pages/ResetPassword";
@@ -14,8 +14,8 @@ const routes = [
   {
     path: "/",
     exact: true,
-    auth: true,
-    component: Dashboard,
+    auth: true, 
+    component: RoutesList,
     fallback: Home
   },
   {

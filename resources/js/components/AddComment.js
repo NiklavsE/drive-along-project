@@ -5,6 +5,8 @@ import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Http from "../Http";
+import Spinner from "../components/spinner/Spinner";
+import ClipLoader from "react-spinners/ClipLoader";
 
 class AddComment extends Component {
     constructor(props) {
@@ -14,7 +16,8 @@ class AddComment extends Component {
             tripId: this.props.tripId,
             value: '',
             error: false,
-            errorText: false
+            errorText: false,
+            isAddingComment: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -36,6 +39,10 @@ class AddComment extends Component {
         if (data.length <= 10) { 
             this.setState({errorText: true});
         } else { 
+            this.setState({
+                isAddingComment: true,
+            });
+
             let trip = this.props.trip;
 
             const apiUrl = `${this.api}/${trip}`;
@@ -44,8 +51,10 @@ class AddComment extends Component {
             .then(response => {
                 this.setState({
                     errorText: false,
-                    value: ''
+                    value: '',
+                    isAddingComment: false,
                 });
+
                 this.props.loadComments();
             })
             .catch(() => {
@@ -74,8 +83,16 @@ class AddComment extends Component {
                         helperText="Tekstam jāsatur vismaz 10 rakstzīmes"
                         />
                     </Grid>
-                    <Grid item xs={2} style={{ textAlign: "right" }}>
+                    <Grid item xs={2} style={{ textAlign: "center" }}>
+
+                    {this.state.isAddingComment ? 
+                    (<ClipLoader
+                        size={50}
+                        color={"#0066ff"}
+                    />) : (
                         <Button type="submit"> Pievienot komentāru </Button>
+                    )}
+
                     </Grid>
                 </Grid>
             </form>

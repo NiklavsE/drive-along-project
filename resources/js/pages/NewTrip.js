@@ -10,7 +10,9 @@ import MyTripsModal from "../components/MyTripsModal";
 import { DateTimePicker , MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import Select from 'react-select';
-import Pace from 'react-pace-progress';
+import Spinner from "../components/spinner/Spinner";
+import AlertModal from "../components/AlertModal";
+import  { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -45,7 +47,7 @@ class NewTrip extends Component {
       errorMessage: '',
       isModalOpen: false,
       saveFailed: null,
-      isSavingForm: false
+      isLoadingData: false,
     };
 
     // API endpoint.
@@ -59,6 +61,18 @@ class NewTrip extends Component {
   }
 
   componentDidMount() {
+    this.setState({
+      isLoadingData: true
+    });
+
+    setTimeout(() => {
+      this.setState({
+        isLoadingData: false
+      })
+      },
+      1500
+    );
+
     this.fetchRoutes();
   }
 
@@ -104,7 +118,7 @@ class NewTrip extends Component {
   handleSubmit() {
     this.setState({
       isModalOpen: false,
-      isSavingForm: true,
+      isLoadingData: true,
       saveFailed: null,
       StartingPointError: false,
       DestinationError: false,
@@ -166,17 +180,19 @@ class NewTrip extends Component {
           if (response.data.error == false) {
             this.setState({
               saveFailed: false,
-              isSavingForm: false,
+              isLoadingData: false,
               StartingPoint: '',
               Destination: '',
               Time: new Date(Date.now()),
               Route: '',
-              PassengerCount: ''
+              PassengerCount: '',
+              isAlertModalOpen: true,
             });
           } else {
             this.setState({
               saveFailed: true,
-              isSavingForm: false
+              isLoadingData: false,
+              isAlertModalOpen: true,
             })
           }
 
@@ -189,7 +205,7 @@ class NewTrip extends Component {
 
     } else {
       this.setState({
-        isSavingForm: false
+        isLoadingData: false
       })
     }
   }
@@ -207,15 +223,52 @@ class NewTrip extends Component {
       isModalOpen: false,
     })
   }
+  
+  closeAlertModal() {
+    this.setState({
+      isAlertModalOpen: false,
+    })
+  }
+
+  redirectToMyTrips() {
+    this.setState({
+      isAlertModalOpen: false,
+      redirectToMyTrips: true,
+    })
+  }
 
   render() {
-      return (
-        <form onSubmit={() => this.openModal(event)}>
-          <Paper style={{ padding: "40px 20px", margin: "10px" }}>
-          { this.state.isSavingForm == true && <Pace color="#0066ff"/> }
-          { this.state.saveFailed === true && <Alert severity="error">Brauciens netika saglabāts!</Alert> }
-          { this.state.saveFailed === false && <Alert severity="success">Brauciens veiksmīgi saglabāts!</Alert> }
 
+      if (this.state.redirectToMyTrips) { 
+        return <Redirect to='/my-trips' />
+      }
+
+      return (
+        <div>
+        {this.state.isLoadingData ? 
+          (<Spinner />) : 
+          (
+            <form onSubmit={() => this.openModal(event)}>
+            <Paper style={{ padding: "40px 20px", margin: "10px" }}>
+
+            { this.state.saveFailed === true && 
+              <AlertModal
+              show={this.state.isAlertModalOpen}
+              execute={() => this.closeAlertModal()}
+              onClose={() => this.closeAlertModal()}
+              text={"Brauciens netika izveidots! :("}
+              />
+            }
+
+            { this.state.saveFailed === false && 
+              <AlertModal
+              show={this.state.isAlertModalOpen}
+              execute={() => this.redirectToMyTrips()}
+              onClose={() => this.closeAlertModal()}
+              text={"Brauciens veiksmīgi izveidots!"}
+              />
+            }
+  
             { this.state.isModalOpen == true && 
               <MyTripsModal
               text={"Vai tiešām vēlaties pievienot šo braucienu?"}
@@ -224,82 +277,85 @@ class NewTrip extends Component {
               show={this.state.isModalOpen}
             />
             }
-
-          <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}>
-            <h2>Brauciena izveidošana</h2>
-          </Grid>
-
-          <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}>
-          <TextField 
-              name="StartingPoint"
-              value={this.state.StartingPoint} 
-              fullWidth={true} 
-              id="outlined-basic" 
-              label="Sākumpunkts" 
-              variant="outlined" 
-              onChange={this.handleChange} 
-              error = {this.state.StartingPointError}
-              helperText="Tekstam jāsatur vismaz 5 rakstzīmes"
-          />
-          </Grid>
-          <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
-          <TextField 
-              name="Destination"
-              value={this.state.Destination} 
-              fullWidth={true} 
-              id="outlined-basic" 
-              label="Galamērķis" 
-              variant="outlined" 
-              onChange={this.handleChange} 
-              error = {this.state.DestinationError}
-              helperText="Tekstam jāsatur vismaz 10 rakstzīmes"
-          />
-          </Grid>
-          <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
-          <TextField 
-              name="PassengerCount"
-              type="number"
-              value={this.state.PassengerCount} 
-              fullWidth={true} 
-              id="outlined-basic" 
-              label="Pasažieru skaits" 
-              variant="outlined" 
-              onChange={this.handleChange} 
-              error = {this.state.PassengerCountError}
-              helperText="Pasažieru skaitam ir jābūt skaitlim no 1 līdz 10"
-          />
-          </Grid>
-
-          <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DateTimePicker
-              name="Time"
-              autoOk
-              ampm={false}
-              value={this.state.Time}
-              onChange={this.handleDateChange}
-              label="Izbraukšanas laiks"
-              disablePast
+  
+            <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}>
+              <h2>Brauciena izveidošana</h2>
+            </Grid>
+  
+            <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}>
+            <TextField 
+                name="StartingPoint"
+                value={this.state.StartingPoint} 
+                fullWidth={true} 
+                id="outlined-basic" 
+                label="Sākumpunkts" 
+                variant="outlined" 
+                onChange={this.handleChange} 
+                error = {this.state.StartingPointError}
+                helperText="Tekstam jāsatur vismaz 5 rakstzīmes"
             />
-          </MuiPickersUtilsProvider>
-          
-          </Grid>
-          <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
-          <div style={{width: '100%'}}>
-          <Select
-            name="Route"
-            value={this.state.Route }
-            isLoading = { this.state.isLoadingRoutes }
-            options={this.state.routes}  
-            onChange={this.handleSelectChange}                
-          />
-          </div>
-          </Grid>
-          <Grid container justify="flex-end">
-              <Button color="primary" type="submit">Saglabāt</Button>
-          </Grid>
-          </Paper>
-        </form>
+            </Grid>
+            <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
+            <TextField 
+                name="Destination"
+                value={this.state.Destination} 
+                fullWidth={true} 
+                id="outlined-basic" 
+                label="Galamērķis" 
+                variant="outlined" 
+                onChange={this.handleChange} 
+                error = {this.state.DestinationError}
+                helperText="Tekstam jāsatur vismaz 10 rakstzīmes"
+            />
+            </Grid>
+            <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
+            <TextField 
+                name="PassengerCount"
+                type="number"
+                value={this.state.PassengerCount} 
+                fullWidth={true} 
+                id="outlined-basic" 
+                label="Pasažieru skaits" 
+                variant="outlined" 
+                onChange={this.handleChange} 
+                error = {this.state.PassengerCountError}
+                helperText="Pasažieru skaitam ir jābūt skaitlim no 1 līdz 10"
+            />
+            </Grid>
+  
+            <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <DateTimePicker
+                name="Time"
+                autoOk
+                ampm={false}
+                value={this.state.Time}
+                onChange={this.handleDateChange}
+                label="Izbraukšanas laiks"
+                disablePast
+              />
+            </MuiPickersUtilsProvider>
+            
+            </Grid>
+            <Grid container wrap="nowrap" style={{ padding: "5px", margin: "10px" }}> 
+            <div style={{width: '100%'}}>
+            <Select
+              name="Route"
+              value={this.state.Route }
+              isLoading = { this.state.isLoadingRoutes }
+              options={this.state.routes}  
+              onChange={this.handleSelectChange}                
+            />
+            </div>
+            </Grid>
+            <Grid container justify="flex-end">
+                <Button color="primary" type="submit">Saglabāt</Button>
+            </Grid>
+            </Paper>
+          </form>
+          )
+        }
+        </div>
       )
   }
 }

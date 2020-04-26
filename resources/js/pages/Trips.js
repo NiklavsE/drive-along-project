@@ -3,19 +3,16 @@ import { connect } from "react-redux";
 import Http from "../Http";
 import { withStyles } from "@material-ui/core/styles";
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
-import Pace from 'react-pace-progress'
-
-import Snackbar from '@material-ui/core/Snackbar';
-import Alert from '@material-ui/lab/Alert';
-
+import Pace from 'react-pace-progress';
+import AlertModal from '../components/AlertModal';
 import JoinTripModal from '../components/JoinTripModal';
+import Spinner from '../components/spinner/Spinner';
+
 
 const useStyles = theme => ({
   root: {
@@ -45,13 +42,10 @@ class Trips extends Component {
       trips: [],
       error: false,
       errorMessage: '',
-      tripFullId: null,
-      isalreadyJoinedId: null,
-      successId: null,
-      alreadyJoinedErrorId: null,
       isJoinTripModalOpen: false,
       joinTripModalTripId: null,
-      isLoadingTrips: true,
+      isLoadingData: true,
+      joinTripStatus: ''
     };
 
     // API endpoint.
@@ -72,11 +66,31 @@ class Trips extends Component {
     });
   }
 
+  closeAlertModal = () => {
+    this.setState({
+      alertModalOpen: false,
+      joinTripStatus: ''
+    })
+  }
+
 
   addPassenger = (key) => {
+
+    this.closeJoinTripModal();
+
+    this.setState({
+      isLoadingData: true
+    });
+
     let updatedTrips = this.state.trips;
+
     Http.post(`/api/v1/trip-passenger/${key}`)
       .then(response => {
+
+        this.setState({
+          isLoadingData: false
+        });
+
         if (response.data.error == false) {
           updatedTrips.map(trip => {
             if (trip.id == key) {
@@ -85,33 +99,14 @@ class Trips extends Component {
           });
           this.setState({
             trips: updatedTrips,
-            successId: response.data.success,
-            isalreadyJoined: null,
-            tripFullId: null
+            joinTripStatus: response.data.status,
+            alertModalOpen: true
           });
-          this.closeJoinTripModal();
         } else {
-          if (response.data.tripFull != '') {
-            this.setState({
-              tripFullId: response.data.tripFull,
-              successId: null,
-              isalreadyJoined: null
-            });
-          } else if (response.data.isalreadyJoined != '') { 
-            this.setState({
-              tripFullId: null,
-              successId: null,
-              isalreadyJoinedId: response.data.isalreadyJoined
-            });
-          } else if (response.data.notAllowed != '') {
-            this.setState({
-              tripFullId: null,
-              successId: null,
-              isalreadyJoinedId: null,
-              notAllowedId: response.data.notAllowed
-            }); 
-          }
-          this.closeJoinTripModal();
+          this.setState({
+            joinTripStatus: response.data.status,
+            alertModalOpen: true
+          });
         }
       })
       .catch(() => {
@@ -137,7 +132,7 @@ class Trips extends Component {
             })
           )
         })
-        this.setState({isLoadingTrips: false})
+        this.setState({isLoadingData: false})
       })
       .catch(() => {
         this.setState({
@@ -150,19 +145,51 @@ class Trips extends Component {
 
     const { classes } = this.props;
     const { trips, errorMessage } = this.state;
-    const { isLoadingTrips } = this.state
 
     return (
       <div>
-      {this.state.isLoadingTrips ? 
-        (<Pace color="#0066ff"/>) : (
+
+      {this.state.isLoadingData ? 
+        (<Spinner />) : (
+          
           trips.map(trip => (
           <Card className={classes.root} key = {trip.id}>
           
-          { this.state.tripFullId == trip.id && <Alert severity="error">Pasažieru skaita limits ir sasniegts!</Alert> }
-          { this.state.successId == trip.id && <Alert severity="success">Esat veiksmīgi pievienojies braucienam! Dodaties uz "Mani braucieni" sadaļu, lai uzzinātu vairāk!</Alert> }
-          { this.state.isalreadyJoinedId == trip.id && <Alert severity="error">Jūs jau esat pievienojies šim braucienam!</Alert> }
-          { this.state.notAllowedId == trip.id && <Alert severity="error">Dienas laikā Jūs drīkstat pievienoties tikai vienam braucienam un šī paša maršruta atpakaļceļam!</Alert> }
+          { this.state.joinTripStatus == 'trip full' && 
+            <AlertModal
+              show={this.state.alertModalOpen}
+              execute={() => this.closeAlertModal()}
+              onClose={() => this.closeAlertModal()}
+              text={"Pasažieru skaita limits ir sasniegts!"}
+            />
+          }
+
+          { this.state.joinTripStatus == 'success' && 
+            <AlertModal
+              show={this.state.alertModalOpen}
+              execute={() => this.closeAlertModal()}
+              onClose={() => this.closeAlertModal()}
+            text={"Esat veiksmīgi pievienojies braucienam! Dodaties uz 'Mani braucieni' sadaļu, lai uzzinātu vairāk!"}
+            />
+          }
+
+          { this.state.joinTripStatus == 'is already joined' && 
+            <AlertModal
+              show={this.state.alertModalOpen}
+              execute={() => this.closeAlertModal()}
+              onClose={() => this.closeAlertModal()}
+              text={"Jūs jau esat pievienojies šim braucienam!"}
+            />
+          }
+
+          { this.state.joinTripStatus == 'day limit' && 
+            <AlertModal
+            show={this.state.alertModalOpen}
+            execute={() => this.closeAlertModal()}
+            onClose={() => this.closeAlertModal()}
+            text={"Dienas laikā Jūs drīkstat pievienoties tikai vienam braucienam un šī paša maršruta atpakaļceļam!"}
+            />
+          }
 
           { this.state.joinTripModalTripId == trip.id && 
             <JoinTripModal 
