@@ -103,6 +103,13 @@ class Trips extends Component {
               successId: null,
               isalreadyJoinedId: response.data.isalreadyJoined
             });
+          } else if (response.data.notAllowed != '') {
+            this.setState({
+              tripFullId: null,
+              successId: null,
+              isalreadyJoinedId: null,
+              notAllowedId: response.data.notAllowed
+            }); 
           }
           this.closeJoinTripModal();
         }
@@ -155,6 +162,7 @@ class Trips extends Component {
           { this.state.tripFullId == trip.id && <Alert severity="error">Pasažieru skaita limits ir sasniegts!</Alert> }
           { this.state.successId == trip.id && <Alert severity="success">Esat veiksmīgi pievienojies braucienam! Dodaties uz "Mani braucieni" sadaļu, lai uzzinātu vairāk!</Alert> }
           { this.state.isalreadyJoinedId == trip.id && <Alert severity="error">Jūs jau esat pievienojies šim braucienam!</Alert> }
+          { this.state.notAllowedId == trip.id && <Alert severity="error">Dienas laikā Jūs drīkstat pievienoties tikai vienam braucienam un šī paša maršruta atpakaļceļam!</Alert> }
 
           { this.state.joinTripModalTripId == trip.id && 
             <JoinTripModal 
