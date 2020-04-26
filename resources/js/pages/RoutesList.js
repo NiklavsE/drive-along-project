@@ -10,7 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
-import Pace from 'react-pace-progress';
+import Spinner from '../components/spinner/Spinner';
 
 const useStyles = makeStyles({
   root: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-class Dashboard extends Component {
+class Routeslist extends Component {
   constructor(props) {
     super(props);
 
@@ -57,13 +57,11 @@ class Dashboard extends Component {
 
   render() {
     const { data, error } = this.state;
-    console.log(this.state);
-    let anchorRef = React.createRef();
 
     return (
       <div>
       {this.state.isLoadingRoutes ? 
-        (<Pace color="#0066ff"/>) : (
+        (<Spinner />) : (
       data.map(route => (
         <Link
         underline='none'
@@ -95,4 +93,4 @@ const mapStateToProps = state => ({
   user: state.Auth.user
 });
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps)(Routeslist);

@@ -18,7 +18,7 @@ class TripPassengerService
     {
         $trip = Trip::where('id', $trip_id)->first();
         
-        $passenger_validation = $this->passengerValidation($trip_id, $user_id);
+        $passenger_validation = $this->validatePassenger($trip_id, $user_id);
         
         if ($passenger_validation == 'success') {
             $trip->decrementPassengerCount();
@@ -49,24 +49,16 @@ class TripPassengerService
         return true;
     }
 
-    public function passengerValidation($trip_id, $user_id)
+    public function validatePassenger($trip_id, $user_id)
     {
-        $return_array = [
-            'is_already_joined',
-            'trip_full',
-            'success',
-            'not_allowed'
-
-        ];
-
         if ($this->passenger_repository->isTripFull($trip_id, $user_id)) {
-            return $return_array[1];
+            return 'trip full';
         } else if ($this->passenger_repository->isalreadyJoinedAsPassenger($trip_id, $user_id)) {
-            return $return_array[0];
+            return 'is already joined';
         } else if ($this->passenger_repository->isRestricted($trip_id, $user_id)) {
-            return $return_array[3];
+            return 'day limit';
         } else {
-            return $return_array[2];
+            return 'success';
         }
     }
 }
