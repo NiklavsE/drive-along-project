@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import AlertModal from '../AlertModal';
+import ClipLoader from "react-spinners/ClipLoader";
 
 class ParticipantList extends Component {
     constructor(props) {
@@ -13,13 +14,23 @@ class ParticipantList extends Component {
         this.state = {
             deleteUserModal: false,
             loadUsers: false,
+            deleteUser: null,
+            participants: [],
+            tripId: this.props.trip
         }
         
-        this.api = "/api/v1/";
+        this.api = "/api/v1/trip-passenger";
     }
-    openDeleteUserModal() {
+
+    componentDidMount() {
+        this.setState({ loadUsers: true });
+        this.loadUsers();
+    }
+
+    openDeleteUserModal(id) {
         this.setState({
-            deleteUserModal: true
+            deleteUserModal: true,
+            deleteUser: id,
         });
     }
     deleteUser(userId) {
@@ -29,12 +40,14 @@ class ParticipantList extends Component {
             loadUsers: true,
         });
 
-        Http.delete(`{$this.api}`) 
+        Http.delete(`${this.api}/${userId}`) 
         .then(response => {
-            if(response.error == false) {
+            if(response.data.error == false) {
                 this.loadUsers();
             }
         });
+
+        this.setState({ deleteUser: null });
     }
 
     closeAlertModal() {
@@ -42,26 +55,41 @@ class ParticipantList extends Component {
     }
 
     loadUsers() {
-        Http.get();
+        Http.get(`${this.api}/${this.state.tripId}`)
+        .then(response => {
+            if (response.data.error == false) {
+                this.setState({
+                    loadUsers: false,
+                    participants: response.data.participants
+                });
+            }
+        })
     }
 
     render() {
-        return this.props.participants.length
-        ? (
+        return (
         <div>
 
         { this.state.deleteUserModal && 
             <AlertModal
             show={this.state.deleteUserModal}
-            execute={() => this.closeAlertModal()}
+            execute={() => this.deleteUser(this.state.deleteUser)}
             onClose={() => this.closeAlertModal()}
             text={"Vai tiešām vēlaties dzēst doto lietotāju no braucienu saraksta?"}
             />
         }
 
+        <h4>Citi dalībnieki</h4>
         <Paper style={{ padding: "10px 10px", margin: "10px" }}>
-        <h4>Dalībnieki</h4>
-        { this.props.participants.map(participant => (
+        
+        { this.state.loadUsers &&
+            <ClipLoader 
+                size={50}
+                color={"#0066ff"}
+            />
+        }
+
+        { this.state.participants.map(participant => (
             <Grid key={participant.id} wrap="nowrap" container>
                 <Grid item xs={11}>
                     {participant.name}
@@ -74,7 +102,7 @@ class ParticipantList extends Component {
         }
         </Paper>
         </div>
-        ) : null;
+        );
     }
 }
 

@@ -63,17 +63,24 @@ class TripPassengerService
         }
     }
 
-    public function getPassengers($trip_id)
+    public function getParticipants($trip_id, $user_id)
     {
         $participants = array();
 
         $passenger_ids = TripPassenger::where('trip_id', $trip_id)->pluck('user_id')->toArray();
+
+        $driver = Trip::where('id', $trip_id)->pluck('driver_id')->first();
 
         if (isset($passenger_ids)) { 
             $users = User::whereIn('id', $passenger_ids)->get();
 
             if (isset($users)) { 
                 foreach($users as $user) {
+
+                    if ($user->id == $driver || $user->id == $user_id) {
+                        continue;
+                    }
+                    
                     $participants[] = [
                         'id' => $user->id,
                         'name' => $user->name . ' ' . $user->surname
