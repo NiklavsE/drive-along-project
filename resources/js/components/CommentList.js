@@ -8,7 +8,7 @@ class CommentList extends Component {
     return this.props.comments.length
     ? (
       this.props.comments.map(comment => (
-        <Paper style={{ padding: "40px 20px", margin: "10px" }} key={comment.id}>
+        <Paper style={{ padding: "20px 10px", margin: "10px" }} key={comment.id}>
         <Grid container wrap="nowrap" spacing={2}>
           <Grid item>
             <Avatar alt="Remy Sharp" />

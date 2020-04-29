@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Repositories\TripPassengerRepository;
 use App\Trip;
 use App\TripPassenger;
+use App\User;
 
 class TripPassengerService
 {
@@ -60,5 +61,27 @@ class TripPassengerService
         } else {
             return 'success';
         }
+    }
+
+    public function getPassengers($trip_id)
+    {
+        $participants = array();
+
+        $passenger_ids = TripPassenger::where('trip_id', $trip_id)->pluck('user_id')->toArray();
+
+        if (isset($passenger_ids)) { 
+            $users = User::whereIn('id', $passenger_ids)->get();
+
+            if (isset($users)) { 
+                foreach($users as $user) {
+                    $participants[] = [
+                        'id' => $user->id,
+                        'name' => $user->name . ' ' . $user->surname
+                    ];
+                }
+            }
+        }
+
+        return $participants;
     }
 }

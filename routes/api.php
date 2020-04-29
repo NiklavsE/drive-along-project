@@ -31,6 +31,7 @@ Route::group([
     Route::apiResource('routes', 'TripRoutesController');
     Route::get('trips/{route_id}', 'TripController@index');
     Route::post('trip-passenger/{trip_id}', 'TripPassengerController@store');
+    Route::delete('trip-passenger/{trip_id}', 'TripPassengerController@destroy');
     Route::get('user-trips', 'UserTripController@index');
     Route::post('comment/{trip_id}', 'TripCommentController@store');
     Route::get('comments/{trip_id}', 'TripCommentController@index');
