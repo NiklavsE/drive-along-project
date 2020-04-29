@@ -149,48 +149,48 @@ class Trips extends Component {
     return (
       <div>
 
+        { this.state.joinTripStatus == 'trip full' && 
+        <AlertModal
+          show={this.state.alertModalOpen}
+          execute={() => this.closeAlertModal()}
+          onClose={() => this.closeAlertModal()}
+          text={"Pasažieru skaita limits ir sasniegts!"}
+        />
+      }
+
+      { this.state.joinTripStatus == 'success' && 
+        <AlertModal
+          show={this.state.alertModalOpen}
+          execute={() => this.closeAlertModal()}
+          onClose={() => this.closeAlertModal()}
+        text={"Esat veiksmīgi pievienojies braucienam! Dodaties uz 'Mani braucieni' sadaļu, lai uzzinātu vairāk!"}
+        />
+      }
+
+      { this.state.joinTripStatus == 'is already joined' && 
+        <AlertModal
+          show={this.state.alertModalOpen}
+          execute={() => this.closeAlertModal()}
+          onClose={() => this.closeAlertModal()}
+          text={"Jūs jau esat pievienojies šim braucienam!"}
+        />
+      }
+
+      { this.state.joinTripStatus == 'day limit' && 
+        <AlertModal
+        show={this.state.alertModalOpen}
+        execute={() => this.closeAlertModal()}
+        onClose={() => this.closeAlertModal()}
+        text={"Dienas laikā Jūs drīkstat pievienoties tikai vienam braucienam un šī paša maršruta atpakaļceļam!"}
+        />
+      }
+
       {this.state.isLoadingData ? 
         (<Spinner />) : (
           
           trips.map(trip => (
           <Card className={classes.root} key = {trip.id}>
-          
-          { this.state.joinTripStatus == 'trip full' && 
-            <AlertModal
-              show={this.state.alertModalOpen}
-              execute={() => this.closeAlertModal()}
-              onClose={() => this.closeAlertModal()}
-              text={"Pasažieru skaita limits ir sasniegts!"}
-            />
-          }
-
-          { this.state.joinTripStatus == 'success' && 
-            <AlertModal
-              show={this.state.alertModalOpen}
-              execute={() => this.closeAlertModal()}
-              onClose={() => this.closeAlertModal()}
-            text={"Esat veiksmīgi pievienojies braucienam! Dodaties uz 'Mani braucieni' sadaļu, lai uzzinātu vairāk!"}
-            />
-          }
-
-          { this.state.joinTripStatus == 'is already joined' && 
-            <AlertModal
-              show={this.state.alertModalOpen}
-              execute={() => this.closeAlertModal()}
-              onClose={() => this.closeAlertModal()}
-              text={"Jūs jau esat pievienojies šim braucienam!"}
-            />
-          }
-
-          { this.state.joinTripStatus == 'day limit' && 
-            <AlertModal
-            show={this.state.alertModalOpen}
-            execute={() => this.closeAlertModal()}
-            onClose={() => this.closeAlertModal()}
-            text={"Dienas laikā Jūs drīkstat pievienoties tikai vienam braucienam un šī paša maršruta atpakaļceļam!"}
-            />
-          }
-
+        
           { this.state.joinTripModalTripId == trip.id && 
             <JoinTripModal 
             show={this.state.isJoinTripModalOpen} 

@@ -41,6 +41,8 @@ class UserTripController extends ApiController
         foreach ($trips as $trip) {
             $driver = User::Where('id', $trip->driver_id)->first();
 
+            $participants = $this->passenger_service->getPassengers($trip->id);
+
             $trips_array[] = [
                 "starting_point" => $trip->starting_point,
                 "destination" => $trip->destination,
@@ -49,6 +51,7 @@ class UserTripController extends ApiController
                 "passenger_count" => $trip->passenger_count,
                 "driver" => $driver->name . ' ' . $driver->surname,
                 "comments" => isset($trip_comments[$trip->id]) ? $trip_comments[$trip->id] : [],
+                "participants" => $participants
             ];
         }
 
@@ -89,6 +92,8 @@ class UserTripController extends ApiController
         $trip->route_id = $data->route;
         $trip->driver_id = $user->id;
         $trip->save();
+
+        $this->passenger_service->addPassenger($trip->id, $user->id);
 
         return response()->json([
             "error" => false

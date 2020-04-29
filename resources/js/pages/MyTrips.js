@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import MyTripsModal from "../components/MyTripsModal"
 import Spinner from "../components/spinner/Spinner";
 import ClipLoader from "react-spinners/ClipLoader";
+import ParticipantList from "../components/lists/ParticipantList";
 
 const useStyles = makeStyles({
   root: {
@@ -56,6 +57,7 @@ class MyTrips extends Component {
             passengerCount: trip.passenger_count,
             driver: trip.driver,
             comments: trip.comments,
+            participants: trip.participants
           })
         )
       });
@@ -157,9 +159,12 @@ class MyTrips extends Component {
           <Grid item xs={10}>
           <h4 style={{ margin: 0, textAlign: "left" }}> {trip.startingPoint} - {trip.destination} </h4>
           </Grid>
-          <Grid item xs={2} style={{ align: "right" }}>
-          <Button color="secondary" onClick={() => this.openModal(trip.id)}> Atteikties no brauciena </Button>
+            <Grid item xs={2} style={{ align: "right" }}>
+              <Button color="secondary" onClick={() => this.openModal(trip.id)}> Atteikties no brauciena </Button>
+            </Grid>
           </Grid>
+          <Grid justifycontent="left" item xs zeroMinWidth>
+            <ParticipantList trip={trip.id} participants={trip.participants} />
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
           Šobrīd brīvās vietas: {trip.passengerCount}

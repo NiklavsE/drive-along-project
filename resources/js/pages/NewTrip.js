@@ -170,7 +170,7 @@ class NewTrip extends Component {
       let data = {
         starting_point: startingPoint,
         destination: destination,
-        passenger_count: passengerCount,
+        passenger_count: passengerCount + 1,
         time: time,
         route: route
       }
