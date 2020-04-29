@@ -164,7 +164,7 @@ class MyTrips extends Component {
             </Grid>
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
-            <ParticipantList trip={trip.id} participants={trip.participants} />
+            <ParticipantList trip={trip.id} />
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
           Šobrīd brīvās vietas: {trip.passengerCount}

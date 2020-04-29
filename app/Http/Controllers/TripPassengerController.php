@@ -22,12 +22,19 @@ class TripPassengerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $trip_id)
     {
          // Get user from $request token.
          if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
+
+        $participants = $this->passenger_service->getParticipants($trip_id, $user->id);
+
+        return response()->json([
+            'error' => false,
+            'participants' => $participants
+        ]);
     }
 
     /**
@@ -103,8 +110,17 @@ class TripPassengerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $user_id)
     {
-        //
+        // Get user from $request token.
+        if (! $user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        $deleted_passenger = TripPassenger::where('user_id', $user_id)->delete();
+
+        return response()->json([
+            'error' => false
+        ]);
     }
 }
