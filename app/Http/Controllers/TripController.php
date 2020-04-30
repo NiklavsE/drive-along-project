@@ -96,8 +96,17 @@ class TripController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $trip_id)
     {
-        //
+        // Get user from $request token.
+        if (!$user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        $deleted_trip = Trip::where('id', $trip_id)->delete();
+
+        return response()->json([
+            'errors' => false
+        ]);
     }
 }

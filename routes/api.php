@@ -30,6 +30,7 @@ Route::group([
 ], function ($router) {
     Route::apiResource('routes', 'TripRoutesController');
     Route::get('trips/{route_id}', 'TripController@index');
+    Route::delete('trips/{trip_id}', 'TripController@destroy');
     Route::post('trip-passenger/{trip_id}', 'TripPassengerController@store');
     Route::delete('trip-passenger/{user_id}', 'TripPassengerController@destroy');
     Route::get('trip-passenger/{trip_id}', 'TripPassengerController@index');
