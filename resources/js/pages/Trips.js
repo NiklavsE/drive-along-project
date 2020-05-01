@@ -7,8 +7,6 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import Pace from 'react-pace-progress';
 import AlertModal from '../components/AlertModal';
 import JoinTripModal from '../components/JoinTripModal';
 import Spinner from '../components/spinner/Spinner';
@@ -149,6 +147,7 @@ class Trips extends Component {
   }
 
   render() {
+    console.log(this.props.user);
 
     const { classes } = this.props;
     const { trips, errorMessage } = this.state;
@@ -221,7 +220,10 @@ class Trips extends Component {
             <Button  variant="contained" color="primary" onClick={() => this.openJoinTripModal(trip.id)}>
             Pieteikties braucienam
             </Button>
-            <RemoveTrip trip={trip.id} reloadData={() => this.loadData()} />
+
+            { this.props.user.admin ? (<Button variant="contained">Skatīt</Button>) : null }
+            { this.props.user.admin ? (<RemoveTrip trip={trip.id} reloadData={() => this.loadData()} />) : null }
+
         </CardActions>
         </Card>
       ))
