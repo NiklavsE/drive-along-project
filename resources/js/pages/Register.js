@@ -12,7 +12,9 @@ class Register extends Component {
 
     this.validator = new ReeValidate({
       name: "required|min:3",
+      surname: "required|min:3",
       email: "required|email",
+      telephone: "required|min:8|max:8",
       password: "required|min:6",
       password_confirmation: "required|min:6"
     });
@@ -20,6 +22,8 @@ class Register extends Component {
     this.state = {
       loading: false,
       name: "",
+      surname: "",
+      telephone: "",
       email: "",
       password: "",
       password_confirmation: "",
@@ -69,9 +73,11 @@ class Register extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { name, email, password, password_confirmation } = this.state;
+    const { name, email, password, password_confirmation, surname, telephone } = this.state;
     const credentials = {
       name,
+      surname,
+      telephone,
       email,
       password,
       password_confirmation
@@ -96,6 +102,7 @@ class Register extends Component {
         this.setState({ loading: false, success: true });
       })
       .catch(err => {
+        console.log(err.errors);
         const errors = Object.values(err.errors);
         errors.join(" ");
         const response = {
@@ -121,7 +128,7 @@ class Register extends Component {
           <div className="container">
             <div className="row">
               <div className="section-login col-lg-6 ml-auto mr-auto">
-                <h4>Register for the App</h4>
+                <h4>Reģistrēties sistēmā!</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">
@@ -139,10 +146,10 @@ class Register extends Component {
                         className="alert alert-success text-center"
                         role="alert"
                       >
-                        Registration successful.
+                        Reģistrācija veiksmīga!
                         <br />
                         <Link to="/" href="/">
-                          Please log in with your new email and password.
+                          Lūdzu ievadiet savu jauno e-pastu un paroli!
                         </Link>
                       </div>
                     )}
@@ -157,7 +164,7 @@ class Register extends Component {
                         }}
                       >
                         <div className="form-group">
-                          <label htmlFor="name">Name</label>
+                          <label htmlFor="name">Vārds</label>
                           <input
                             id="name"
                             type="name"
@@ -165,7 +172,7 @@ class Register extends Component {
                             className={classNames("form-control", {
                               "is-invalid": "name" in errors
                             })}
-                            placeholder="Enter name"
+                            placeholder="Vārds"
                             required
                             onChange={this.handleChange}
                             onBlur={this.handleBlur}
@@ -180,7 +187,30 @@ class Register extends Component {
                         </div>
 
                         <div className="form-group">
-                          <label htmlFor="email">Email Address</label>
+                          <label htmlFor="name">Uzvārds</label>
+                          <input
+                            id="surname"
+                            type="surname"
+                            name="surname"
+                            className={classNames("form-control", {
+                              "is-invalid": "surname" in errors
+                            })}
+                            placeholder="Uzvārds"
+                            required
+                            onChange={this.handleChange}
+                            onBlur={this.handleBlur}
+                            disabled={loading}
+                          />
+
+                          {"surname" in errors && (
+                            <div className="invalid-feedback">
+                              {errors.surname}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="form-group">
+                          <label htmlFor="email">E-pasts</label>
                           <input
                             id="email"
                             type="email"
@@ -188,7 +218,7 @@ class Register extends Component {
                             className={classNames("form-control", {
                               "is-invalid": "email" in errors
                             })}
-                            placeholder="Enter email"
+                            placeholder="E-pasts"
                             required
                             onChange={this.handleChange}
                             onBlur={this.handleBlur}
@@ -203,7 +233,30 @@ class Register extends Component {
                         </div>
 
                         <div className="form-group">
-                          <label htmlFor="password">Password</label>
+                        <label htmlFor="name">Telefona numurs</label>
+                        <input
+                          id="telephone"
+                          type="number"
+                          name="telephone"
+                          className={classNames("form-control", {
+                            "is-invalid": "telephone" in errors
+                          })}
+                          placeholder="Telefona numurs"
+                          required
+                          onChange={this.handleChange}
+                          onBlur={this.handleBlur}
+                          disabled={loading}
+                        />
+
+                        {"telephone" in errors && (
+                          <div className="invalid-feedback">
+                            {errors.telephone}
+                          </div>
+                        )}
+                      </div>
+
+                        <div className="form-group">
+                          <label htmlFor="password">Parole</label>
                           <input
                             id="password"
                             type="password"
@@ -211,7 +264,7 @@ class Register extends Component {
                               "is-invalid": "password" in errors
                             })}
                             name="password"
-                            placeholder="Enter password"
+                            placeholder="Parole"
                             required
                             onChange={this.handleChange}
                             onBlur={this.handleBlur}
@@ -226,7 +279,7 @@ class Register extends Component {
 
                         <div className="form-group">
                           <label htmlFor="password_confirmation">
-                            Password Confirmation
+                            Parole atkārtoti
                           </label>
                           <input
                             id="password_confirmation"
@@ -235,7 +288,7 @@ class Register extends Component {
                               "is-invalid": "password_confirmation" in errors
                             })}
                             name="password_confirmation"
-                            placeholder="Confirm password"
+                            placeholder="Parole atkārtoti"
                             required
                             onChange={this.handleChange}
                             onBlur={this.handleBlur}
@@ -255,7 +308,7 @@ class Register extends Component {
                               "btn-loading": loading
                             })}
                           >
-                            Register
+                            Reģistrēties
                           </button>
                         </div>
                       </form>
@@ -266,7 +319,7 @@ class Register extends Component {
                 {!this.state.success && (
                   <div className="password-reset-link text-center">
                     <Link to="/" href="/">
-                      Already registered? Log in.
+                      Esat jau reģistrēts? Ieiet sistēmā!
                     </Link>
                   </div>
                 )}

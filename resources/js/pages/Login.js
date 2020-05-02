@@ -119,7 +119,7 @@ class Login extends Component {
                         className="alert alert-danger text-center"
                         role="alert"
                       >
-                        Credentials were incorrect. Try again!
+                        Ievadītie ieejas parametri nav korekti!
                       </div>
                     )}
 
@@ -132,7 +132,7 @@ class Login extends Component {
                       }}
                     >
                       <div className="form-group">
-                        <label htmlFor="email">Email Address</label>
+                        <label htmlFor="email">E-pasts</label>
                         <input
                           id="email"
                           type="email"
@@ -140,7 +140,7 @@ class Login extends Component {
                           className={classNames("form-control", {
                             "is-invalid": "email" in errors
                           })}
-                          placeholder="Enter email"
+                          placeholder="Ievadiet e-pastu"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -153,7 +153,7 @@ class Login extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Parole</label>
                         <input
                           id="password"
                           type="password"
@@ -161,7 +161,7 @@ class Login extends Component {
                             "is-invalid": "password" in errors
                           })}
                           name="password"
-                          placeholder="Enter password"
+                          placeholder="Jūsu parole"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -181,14 +181,14 @@ class Login extends Component {
                             "btn-loading": loading
                           })}
                         >
-                          Sign In
+                          Ieiet
                         </button>
                       </div>
 
                       <div className="login-invite-text text-center">
                         No account?{" "}
                         <Link to="/register" href="/register">
-                          Register
+                          Reģistrēties
                         </Link>
                         .
                       </div>
@@ -198,7 +198,7 @@ class Login extends Component {
 
                 <div className="password-reset-link text-center">
                   <Link to="/forgot-password" href="/forgot-password">
-                    Forgot Your Password?
+                    Aizmirsi paroli?
                   </Link>
                 </div>
               </div>

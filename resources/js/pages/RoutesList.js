@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Http from "../Http";
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import Spinner from '../components/spinner/Spinner';
+import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
+
+const useStyles = theme => ({
+  paper: {
+    padding: "20px 20px", 
+    margin: "20px 60px",
+  },
+});
 
 class Routeslist extends Component {
   constructor(props) {
@@ -65,8 +67,8 @@ class Routeslist extends Component {
         }}
         key = {route.id}
       >
-        <Paper style={{ padding: "40px 20px", margin: "10px" }}>
-              <Typography gutterBottom variant="h5" component="h2">
+        <Paper className={this.props.classes.paper}>
+              <Typography align="center" gutterBottom variant="h5" component="h2">
                 {route.from} - {route.to}
               </Typography>
         </Paper>
@@ -83,4 +85,6 @@ const mapStateToProps = state => ({
   user: state.Auth.user
 });
 
-export default connect(mapStateToProps)(Routeslist);
+
+export default connect(mapStateToProps)(withStyles(useStyles)(Routeslist));
+  

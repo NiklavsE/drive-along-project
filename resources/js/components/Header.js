@@ -38,18 +38,11 @@ class Header extends Component {
                   Mani braucieni
                 </NavLink>
               </NavItem>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Account
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>Settings</DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem onClick={this.handleLogout}>
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              <NavItem>
+              <NavLink tag={Link} to="/logout" onClick={this.handleLogout}>
+              Iziet
+              </NavLink>
+            </NavItem>
             </Nav>
           </div>
         )}

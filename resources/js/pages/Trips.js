@@ -17,6 +17,8 @@ const useStyles = theme => ({
   root: {
     minWidth: 275,
     justify: 'center',
+    margin: "20px",
+    padding: "20px",
   },
   bullet: {
     display: 'inline-block',
@@ -24,11 +26,19 @@ const useStyles = theme => ({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 14,
+    fontSize: 20,
   },
   pos: {
     marginBottom: 12,
   },
+  button: {
+    background: '#0066ff',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#0066ff',
+      color: '#FFFFFF'
+    }
+  }
 });
 
 
@@ -147,7 +157,7 @@ class Trips extends Component {
   }
 
   render() {
-    console.log(this.props.user);
+
 
     const { classes } = this.props;
     const { trips, errorMessage } = this.state;
@@ -217,7 +227,7 @@ class Trips extends Component {
             </Typography>
             </CardContent>
           <CardActions> 
-            <Button  variant="contained" color="primary" onClick={() => this.openJoinTripModal(trip.id)}>
+            <Button  variant="contained" className={classes.button} onClick={() => this.openJoinTripModal(trip.id)}>
             Pieteikties braucienam
             </Button>
 

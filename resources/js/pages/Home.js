@@ -103,7 +103,7 @@ class Home extends Component {
     const { response, errors, loading } = this.state;
 
     return (
-      <div>
+      <div className="background">
         <div className="d-flex flex-column flex-md-row align-items-md-center py-5">
           <div className="container">
             <div className="row">
@@ -111,13 +111,12 @@ class Home extends Component {
                 <div>
                   <h2>Drive along</h2>
                   <p>
-                    Built with Laravel and React. Includes JWT auth,
-                    registration, login, routing and tests.{" "}
+                    Kopbraukšanas platforma{" "}
                   </p>
                 </div>
               </div>
               <div className="section-login col-lg-6">
-                <h4>Log in to the App</h4>
+                <h4>Autorizēties sistēmā</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">
@@ -131,12 +130,12 @@ class Home extends Component {
                     >
                       {response.error && (
                         <div className="alert alert-danger" role="alert">
-                          Credentials were incorrect. Try again!
+                          Ievadītie ieejas parametri nav korekti! Lūdzu mēģiniet vēlreiz!
                         </div>
                       )}
 
                       <div className="form-group">
-                        <label htmlFor="email">Email Address</label>
+                        <label htmlFor="email">E-pasts</label>
                         <input
                           id="email"
                           type="email"
@@ -144,7 +143,7 @@ class Home extends Component {
                           className={classNames("form-control", {
                             "is-invalid": "email" in errors
                           })}
-                          placeholder="Enter email"
+                          placeholder="E-pasts"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -157,7 +156,7 @@ class Home extends Component {
                       </div>
 
                       <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Parole</label>
                         <input
                           id="password"
                           type="password"
@@ -165,7 +164,7 @@ class Home extends Component {
                             "is-invalid": "password" in errors
                           })}
                           name="password"
-                          placeholder="Enter password"
+                          placeholder="Parole"
                           required
                           onChange={this.handleChange}
                           onBlur={this.handleBlur}
@@ -185,20 +184,20 @@ class Home extends Component {
                             "btn-loading": loading
                           })}
                         >
-                          Sign In
+                          Ieiet
                         </button>
                       </div>
 
                       <div className="login-invite-text text-center">
-                        {"Don't have an account?"}{" "}
-                        <Link to="/register">Register</Link>.
+                        {"Neesi reģistrēts?"}{" "}
+                        <Link to="/register">Reģistrēties</Link>.
                       </div>
                     </form>
                   </div>
                 </div>
 
                 <div className="password-reset-link text-center">
-                  <Link to="/forgot-password">Forgot Your Password?</Link>
+                  <Link to="/forgot-password">Aizmirsi paroli?</Link>
                 </div>
               </div>
             </div>
