@@ -12,12 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import Spinner from '../components/spinner/Spinner';
 
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-});
-
 class Routeslist extends Component {
   constructor(props) {
     super(props);
@@ -71,15 +65,11 @@ class Routeslist extends Component {
         }}
         key = {route.id}
       >
-        <Card className={this.props.classes}>
-          <CardActionArea>
-            <CardContent>
+        <Paper style={{ padding: "40px 20px", margin: "10px" }}>
               <Typography gutterBottom variant="h5" component="h2">
                 {route.from} - {route.to}
               </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
+        </Paper>
         </Link>
       ))
       )}

@@ -7,11 +7,10 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Link } from "react-router-dom";
-import Pace from 'react-pace-progress';
 import AlertModal from '../components/AlertModal';
 import JoinTripModal from '../components/JoinTripModal';
 import Spinner from '../components/spinner/Spinner';
+import RemoveTrip from '../components/buttons/RemoveTrip';
 
 
 const useStyles = theme => ({
@@ -118,30 +117,37 @@ class Trips extends Component {
 
 
   componentDidMount() {
-    const { tripRoute } = this.props.location.state;
+    this.loadData();
+  }
+
+  loadData() { 
+    this.setState({ isLoadingData: true });
     
+    const { tripRoute } = this.props.location.state;
+
     Http.get(`${this.api}/${tripRoute}`)
-      .then(response => {
-        this.setState({
-          trips: response.data.map(trip => ({
-              startingPoint: trip.starting_point,
-              destination: trip.destination,
-              time: trip.time,
-              id: trip.id,
-              passengerCount: trip.passenger_count
-            })
-          )
-        })
-        this.setState({isLoadingData: false})
+    .then(response => {
+      this.setState({
+        trips: response.data.map(trip => ({
+            startingPoint: trip.starting_point,
+            destination: trip.destination,
+            time: trip.time,
+            id: trip.id,
+            passengerCount: trip.passenger_count
+          })
+        )
       })
-      .catch(() => {
-        this.setState({
-          error: "Unable to fetch data."
-        });
+      this.setState({isLoadingData: false})
+    })
+    .catch(() => {
+      this.setState({
+        error: "Unable to fetch data."
       });
+    });
   }
 
   render() {
+    console.log(this.props.user);
 
     const { classes } = this.props;
     const { trips, errorMessage } = this.state;
@@ -211,9 +217,13 @@ class Trips extends Component {
             </Typography>
             </CardContent>
           <CardActions> 
-            <Button onClick={() => this.openJoinTripModal(trip.id)}>
+            <Button  variant="contained" color="primary" onClick={() => this.openJoinTripModal(trip.id)}>
             Pieteikties braucienam
             </Button>
+
+            { this.props.user.admin ? (<Button variant="contained">Skatīt</Button>) : null }
+            { this.props.user.admin ? (<RemoveTrip trip={trip.id} reloadData={() => this.loadData()} />) : null }
+
         </CardActions>
         </Card>
       ))

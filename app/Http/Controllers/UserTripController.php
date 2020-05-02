@@ -96,4 +96,20 @@ class UserTripController extends ApiController
             "error" => false
         ]);
     }
+
+    public function show($trip_id)
+    {
+        // Get user from $request token.
+        if (!$user = auth()->setRequest($request)->user()) {
+        return $this->responseUnauthorized();
+        } 
+
+        $trip = Trip::where('id', $trip_id)->get()->toArray();
+
+        $trip_comments = $this->trip_comment_repository->getMappedTripComments($$trip['id']);
+
+        return response()->json([
+            'trip' => $trip,
+        ]);
+    }
 }
