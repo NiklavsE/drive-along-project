@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Http from "../Http";
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import CommentList from "../components/CommentList";
 import AddComment from "../components/AddComment";
@@ -12,10 +12,19 @@ import Spinner from "../components/spinner/Spinner";
 import ClipLoader from "react-spinners/ClipLoader";
 import ParticipantList from "../components/lists/ParticipantList";
 
-const useStyles = makeStyles({
+const useStyles = theme => ({
   root: {
     maxWidth: 200
   },
+  deleteButton: {
+    background: 'red',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: 'red',
+      color: '#FFFFFF'
+    },
+    borderRadius: 25
+  }
 });
 
 class MyTrips extends Component {
@@ -138,7 +147,7 @@ class MyTrips extends Component {
 
   render() {
     const { trips, errorMessage } = this.state;
-
+    const { classes } = this.props;
     return (
       <div>
       {this.state.isLoadingData ? 
@@ -160,29 +169,31 @@ class MyTrips extends Component {
           <h4 style={{ margin: 0, textAlign: "left" }}> {trip.startingPoint} - {trip.destination} </h4>
           </Grid>
             <Grid item xs={2} style={{ align: "right" }}>
-              <Button color="secondary" onClick={() => this.openModal(trip.id)}> Atteikties no brauciena </Button>
+              <Button className={classes.deleteButton} onClick={() => this.openModal(trip.id)}>X Atteikties no brauciena </Button>
             </Grid>
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
             <ParticipantList trip={trip.id} />
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
-          Šobrīd brīvās vietas: {trip.passengerCount}
+          <h4>Šobrīd brīvās vietas: {trip.passengerCount}</h4>
           </Grid>
           <Grid justifycontent="center" item xs zeroMinWidth>
-          Komentāri:
+            <Paper style={{ padding: "10px 10px", margin: "10px" }} key={trip.id}>
+              <h4>Komentāri:</h4>
+              {this.state.isLoadingCommentList ? 
+                (<ClipLoader
+                  size={50}
+                  color={"#0066ff"}
+              />) : (
+                <CommentList comments={trip.comments} reloadComments={() => this.loadComments(trip.id)}/>
+              )}
+              <AddComment 
+                trip={trip.id} 
+                loadComments={() => this.loadComments(trip.id)}
+              />
+            </Paper>
           </Grid>
-          {this.state.isLoadingCommentList ? 
-            (<ClipLoader
-              size={50}
-              color={"#0066ff"}
-          />) : (
-            <CommentList comments={trip.comments} />
-          )}
-          <AddComment 
-            trip={trip.id} 
-            loadComments={() => this.loadComments(trip.id)}
-          />
           </Paper>
           ))
         )
@@ -197,4 +208,4 @@ const mapStateToProps = state => ({
   user: state.Auth.user
 });
 
-export default connect(mapStateToProps)(MyTrips);
+export default connect(mapStateToProps)(withStyles(useStyles)(MyTrips));

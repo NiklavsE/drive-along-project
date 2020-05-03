@@ -19,6 +19,15 @@ const useStyles = theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  button: {
+    background: '#0066ff',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#0066ff',
+      color: '#FFFFFF'
+    },
+    borderRadius: 25
+  }
 });
 
 class AlertModal extends Component {
@@ -48,7 +57,7 @@ class AlertModal extends Component {
           <div className={classes.paper}>
             <h2 id="transition-modal-title">Paziņojums</h2>
             <p id="transition-modal-description">{ this.props.text }</p>
-            <Button onClick={this.props.execute}>Labi!</Button>
+            <Button className={classes.button} onClick={this.props.execute}>Labi!</Button>
           </div>
         </Fade>
       </Modal>

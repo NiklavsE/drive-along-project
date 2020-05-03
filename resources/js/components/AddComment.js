@@ -7,6 +7,22 @@ import Button from '@material-ui/core/Button';
 import Http from "../Http";
 import Spinner from "../components/spinner/Spinner";
 import ClipLoader from "react-spinners/ClipLoader";
+import { withStyles } from "@material-ui/core/styles";
+
+const useStyles = theme => ({
+    root: {
+      maxWidth: 200
+    },
+    button: {
+        background: '#0066ff',
+        color: '#FFFFFF',
+        '&:hover': {
+          backgroundColor: '#0066ff',
+          color: '#FFFFFF'
+        },
+        borderRadius: 25
+    }
+  });
 
 class AddComment extends Component {
     constructor(props) {
@@ -66,6 +82,7 @@ class AddComment extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (
             <form onSubmit={this.handleSubmit} >
                 <Grid style={{ padding: "20px", margin: "10px" }} container wrap="nowrap">
@@ -90,7 +107,7 @@ class AddComment extends Component {
                         size={50}
                         color={"#0066ff"}
                     />) : (
-                        <Button type="submit"> Pievienot komentāru </Button>
+                        <Button type="submit" className={classes.button}> Pievienot komentāru </Button>
                     )}
 
                     </Grid>
@@ -101,7 +118,7 @@ class AddComment extends Component {
 }
 
 
-export default AddComment;
+export default  withStyles(useStyles)(AddComment);
 
 
 

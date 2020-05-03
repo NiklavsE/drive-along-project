@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Http from "../Http";
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import { Divider, Avatar, Grid, Paper, TextField } from "@material-ui/core";
 import Alert from '@material-ui/lab/Alert';
@@ -14,10 +14,19 @@ import Spinner from "../components/spinner/Spinner";
 import AlertModal from "../components/AlertModal";
 import  { Redirect } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStyles = theme => ({
   root: {
     maxWidth: 200
   },
+  button: {
+    background: '#0066ff',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#0066ff',
+      color: '#FFFFFF'
+    },
+    borderRadius: 25
+  }
 });
 
 class NewTrip extends Component {
@@ -238,6 +247,7 @@ class NewTrip extends Component {
   }
 
   render() {
+    const { classes } = this.props;
 
       if (this.state.redirectToMyTrips) { 
         return <Redirect to='/my-trips' />
@@ -349,7 +359,7 @@ class NewTrip extends Component {
             </div>
             </Grid>
             <Grid container justify="flex-end">
-                <Button color="primary" type="submit">Saglabāt</Button>
+                <Button className={classes.button} color="primary" type="submit">Saglabāt</Button>
             </Grid>
             </Paper>
           </form>
@@ -365,4 +375,4 @@ const mapStateToProps = state => ({
   user: state.Auth.user
 });
 
-export default connect(mapStateToProps)(NewTrip);
+export default connect(mapStateToProps)(withStyles(useStyles)(NewTrip));

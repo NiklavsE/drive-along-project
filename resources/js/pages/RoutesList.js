@@ -15,6 +15,15 @@ const useStyles = theme => ({
     padding: "20px 20px", 
     margin: "20px 60px",
   },
+  deleteButton: {
+    background: 'red',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: 'red',
+      color: '#FFFFFF'
+    },
+    borderRadius: 25
+  }
 });
 
 class Routeslist extends Component {
@@ -98,6 +107,8 @@ class Routeslist extends Component {
   render() {
     const { data, error } = this.state;
 
+    const { classes } = this.props;
+
     return (
       <div>
       {this.state.isLoadingRoutes ? 
@@ -134,7 +145,7 @@ class Routeslist extends Component {
               size={30}
               color={"#0066ff"}
             /> }
-            { (this.props.user.admin && this.state.deleteRouteId == null) ? (<Button variant="contained" color="secondary" onClick={() => this.OpenDeleteRouteModal(route.id)}>X Dzēst</Button>) : null }
+            { (this.props.user.admin && this.state.deleteRouteId == null) ? (<Button className={classes.deleteButton} onClick={() => this.OpenDeleteRouteModal(route.id)}>X Dzēst</Button>) : null }
           </Grid>
         </Grid>
         </Paper>
