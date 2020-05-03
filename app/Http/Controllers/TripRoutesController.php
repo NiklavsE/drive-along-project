@@ -43,29 +43,14 @@ class TripRoutesController extends ApiController
             return $this->responseUnauthorized();
         }
 
-        // Validate all the required parameters have been sent.
-        $validator = Validator::make($request->all(), [
-            'value' => 'required',
-        ]);
+        $data = json_decode($request->getContent());
 
-        if ($validator->fails()) {
-            return $this->responseUnprocessable($validator->errors());
-        }
+        $route = new TripRoute;
+        $route->from = $data->from;
+        $route->to = $data->to;
+        $route->save();
 
-        // Warning: Data isn't being fully sanitized yet.
-        try {
-            $todo = Todo::create([
-                'user_id' => $user->id,
-                'value' => request('value'),
-            ]);
-            return response()->json([
-                'status' => 201,
-                'message' => 'Resource created.',
-                'id' => $todo->id
-            ], 201);
-        } catch (Exception $e) {
-            return $this->responseServerError('Error creating resource.');
-        }
+        return response()->json(['errors' => false]);
     }
 
     /**
@@ -139,25 +124,15 @@ class TripRoutesController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $route_id)
     {
         // Get user from $request token.
         if (! $user = auth()->setRequest($request)->user()) {
             return $this->responseUnauthorized();
         }
 
-        $todo = Todo::where('id', $id)->firstOrFail();
+        $route = TripRoute::where('id', $route_id)->delete();
 
-        // User can only delete their own data.
-        if ($todo->user_id !== $user->id) {
-            return $this->responseUnauthorized();
-        }
-
-        try {
-            $todo->delete();
-            return $this->responseResourceDeleted();
-        } catch (Exception $e) {
-            return $this->responseServerError('Error deleting resource.');
-        }
+        return response()->json(['errors' => false]);
     }
 }

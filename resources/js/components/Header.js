@@ -29,6 +29,14 @@ class Header extends Component {
           <div className="navigation d-flex justify-content-end">
             <Nav>
               <NavItem>
+              { (this.props.user.admin == 1) ? (
+                <NavLink tag={Link} to="/route/new">
+                + Pievienot Maršrutu
+              </NavLink>
+              ) : null
+              }  
+              </NavItem>
+              <NavItem>
                 <NavLink tag={Link} to="/my-trips/new">
                   + Izveidot braucienu
                 </NavLink>
@@ -52,7 +60,8 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.Auth.isAuthenticated
+  isAuthenticated: state.Auth.isAuthenticated,
+  user: state.Auth.user
 });
 
 export default connect(mapStateToProps)(Header);

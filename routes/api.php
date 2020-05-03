@@ -28,7 +28,9 @@ Route::group([
 Route::group([
     'prefix' => 'v1'
 ], function ($router) {
-    Route::apiResource('routes', 'TripRoutesController');
+    Route::get('routes', 'TripRoutesController@index');
+    Route::post('route', 'TripRoutesController@store');
+    Route::delete('route/{route_id}', 'TripRoutesController@destroy');
     Route::get('trips/{route_id}', 'TripController@index');
     Route::delete('trips/{trip_id}', 'TripController@destroy');
     Route::post('trip-passenger/{trip_id}', 'TripPassengerController@store');
@@ -39,6 +41,8 @@ Route::group([
     Route::get('comments/{trip_id}', 'TripCommentController@index');
     Route::delete('user-trips/{trip_id}', 'UserTripController@destroy');
     Route::post('user-trip', 'UserTripController@create');
+    Route::get('user-trip/{trip_id}', 'UserTripController@show');
+    Route::delete('comment/{comment_id}', 'TripCommentController@destroy');
 });
 
 // Not Found

@@ -11,7 +11,8 @@ import AlertModal from '../components/AlertModal';
 import JoinTripModal from '../components/JoinTripModal';
 import Spinner from '../components/spinner/Spinner';
 import RemoveTrip from '../components/buttons/RemoveTrip';
-
+import  { Redirect } from 'react-router-dom';
+import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
 
 const useStyles = theme => ({
   root: {
@@ -26,10 +27,11 @@ const useStyles = theme => ({
     transform: 'scale(0.8)',
   },
   title: {
-    fontSize: 20,
+    fontSize: 25,
   },
   pos: {
     marginBottom: 12,
+    fontSize: 18,
   },
   button: {
     background: '#0066ff',
@@ -37,7 +39,17 @@ const useStyles = theme => ({
     '&:hover': {
       backgroundColor: '#0066ff',
       color: '#FFFFFF'
-    }
+    },
+    borderRadius: 25
+  },
+  ViewButton: {
+    background: '#808080',
+    color: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#808080',
+      color: '#FFFFFF'
+    },
+    borderRadius: 25
   }
 });
 
@@ -54,7 +66,9 @@ class Trips extends Component {
       isJoinTripModalOpen: false,
       joinTripModalTripId: null,
       isLoadingData: true,
-      joinTripStatus: ''
+      joinTripStatus: '',
+      redirectToTrip: false,
+      redirectTripId: null,
     };
 
     // API endpoint.
@@ -143,9 +157,11 @@ class Trips extends Component {
             destination: trip.destination,
             time: trip.time,
             id: trip.id,
-            passengerCount: trip.passenger_count
+            passengerCount: trip.passenger_count,
           })
-        )
+        ),
+        redirectToTrip: false,
+        redirectTripId: null,
       })
       this.setState({isLoadingData: false})
     })
@@ -156,8 +172,19 @@ class Trips extends Component {
     });
   }
 
+  redirectToTrip(tripId) {
+    this.setState({
+      redirectToTrip: true,
+      redirectTripId: tripId,
+    });
+  }
+
+
   render() {
 
+    if (this.state.redirectToTrip) {  
+      return <Redirect to={{ pathname: '/user-trip', state: { trip: this.state.redirectTripId } }}/>
+    }
 
     const { classes } = this.props;
     const { trips, errorMessage } = this.state;
@@ -216,22 +243,27 @@ class Trips extends Component {
           }
 
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h2" className={classes.title}>
-                {trip.startingPoint} - {trip.destination}
-              </Typography>
-              <Typography className={classes.pos} color="textSecondary">
-                {trip.time }
-              </Typography>
-              <Typography variant="body2" component="p">
-              Šobrīd brīvās vietas: {trip.passengerCount}
-            </Typography>
+            <Grid container wrap="nowrap">
+              <Grid item xs={9}>
+                <Typography gutterBottom variant="h1" className={classes.title}>
+                  {trip.startingPoint} - {trip.destination}
+                </Typography>
+                <Typography className={classes.pos}>
+                  {trip.time }
+                </Typography>
+                <Typography variant="body2" component="p">
+                  Šobrīd brīvās vietas: {trip.passengerCount}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Button  variant="contained" className={classes.button} onClick={() => this.openJoinTripModal(trip.id)}>
+                + Pieteikties braucienam
+                </Button>
+              </Grid>
+            </Grid>
             </CardContent>
           <CardActions> 
-            <Button  variant="contained" className={classes.button} onClick={() => this.openJoinTripModal(trip.id)}>
-            Pieteikties braucienam
-            </Button>
-
-            { this.props.user.admin ? (<Button variant="contained">Skatīt</Button>) : null }
+            { this.props.user.admin ? (<Button variant="contained" className={classes.ViewButton} onClick={() => this.redirectToTrip(trip.id)}>Skatīt</Button>) : null }
             { this.props.user.admin ? (<RemoveTrip trip={trip.id} reloadData={() => this.loadData()} />) : null }
 
         </CardActions>

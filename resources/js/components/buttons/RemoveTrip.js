@@ -6,7 +6,19 @@ import Button from '@material-ui/core/Button';
 import Http from "../../Http";
 import ClipLoader from "react-spinners/ClipLoader";
 import AlertModal from '../AlertModal';
+import { withStyles } from "@material-ui/core/styles";
 
+const useStyles = theme => ({
+    deleteButton: {
+      background: 'red',
+      color: '#FFFFFF',
+      '&:hover': {
+        backgroundColor: 'red',
+        color: '#FFFFFF'
+      },
+      borderRadius: 25
+    }
+  });
 class RemoveTrip extends Component {
     constructor(props) {
         super(props);
@@ -50,6 +62,8 @@ class RemoveTrip extends Component {
     }
 
     render() {
+        const { classes } = this.props;
+
         return this.props.trip ? (
             <div>
 
@@ -78,20 +92,19 @@ class RemoveTrip extends Component {
             />) : (
                 <Button
                 variant="contained" 
-                color="secondary"
+                className={classes.deleteButton}
                 onClick={() => this.confirmDelete(this.props.trip)}
             >
-                Noņemt braucienu            
+                X Noņemt braucienu            
             </Button>
             )}
-            
             </div>
         ) : null;
     }
 }
 
 
-export default RemoveTrip;
+export default withStyles(useStyles)(RemoveTrip);
 
 
 

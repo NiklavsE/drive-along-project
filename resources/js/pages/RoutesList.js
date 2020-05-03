@@ -6,6 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import Spinner from '../components/spinner/Spinner';
 import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
+import Button from '@material-ui/core/Button';
+import AlertModal from '../components/AlertModal';
+import ClipLoader from "react-spinners/ClipLoader";
 
 const useStyles = theme => ({
   paper: {
@@ -30,6 +33,14 @@ class Routeslist extends Component {
   }
 
   componentDidMount() {
+    this.loadRoutes();
+  }
+
+  loadRoutes() {
+    this.setState({
+      isLoadingRoutes: true,
+    });
+
     Http.get(`${this.api}`)
       .then(response => {
         const { data } = response.data;
@@ -51,6 +62,39 @@ class Routeslist extends Component {
     this.setState({ [name]: value });
   };
 
+  OpenDeleteRouteModal(routeId) {
+    this.setState({
+      'deleteRouteId': routeId,
+      'OpenDeleteRouteModal': true,
+    });
+  }
+
+  closeAlertModal() {
+    this.setState({
+      OpenDeleteRouteModal: false,
+      deleteRouteId: null,
+    });
+  }
+
+  deleteRoute(id) {
+    this.setState({
+      OpenDeleteRouteModal: false,
+      deleteRouteId: id,
+    });
+
+    const api = 'api/v1/route';
+    Http.delete(`${api}/${id}`)
+    .then(response => {
+      if(response.data.errors == false) { 
+        this.setState({
+          deleteRouteId: null,
+        });
+
+        this.loadRoutes();
+      }
+    });
+  }
+
   render() {
     const { data, error } = this.state;
 
@@ -59,20 +103,41 @@ class Routeslist extends Component {
       {this.state.isLoadingRoutes ? 
         (<Spinner />) : (
       data.map(route => (
-        <Link
-        underline='none'
-        to={{
-          pathname: "/trips",
-          state: { tripRoute: route.id }
-        }}
-        key = {route.id}
-      >
-        <Paper className={this.props.classes.paper}>
-              <Typography align="center" gutterBottom variant="h5" component="h2">
+        <Paper className={this.props.classes.paper} key = {route.id}>
+                      
+        { this.state.deleteRouteId == route.id && 
+          <AlertModal
+          show={this.state.OpenDeleteRouteModal}
+          execute={() => this.deleteRoute(this.state.deleteRouteId)}
+          onClose={() => this.closeAlertModal()}
+          text={"Vai tiešām vēlaties dzēst doto maršrutu?"}
+          />
+        }
+
+        <Grid container wrap="nowrap">
+          <Grid item xs={10}>
+            <Typography align="center" gutterBottom variant="h5" component="h2">
+              <Link
+                underline='none'
+                to={{
+                  pathname: "/trips",
+                  state: { tripRoute: route.id }
+                }}
+                color="inherit"
+              >
                 {route.from} - {route.to}
-              </Typography>
+              </Link>
+            </Typography>
+          </Grid>
+          <Grid itme xs={2}>
+            { this.state.deleteRouteId == route.id && <ClipLoader
+              size={30}
+              color={"#0066ff"}
+            /> }
+            { (this.props.user.admin && this.state.deleteRouteId == null) ? (<Button variant="contained" color="secondary" onClick={() => this.OpenDeleteRouteModal(route.id)}>X Dzēst</Button>) : null }
+          </Grid>
+        </Grid>
         </Paper>
-        </Link>
       ))
       )}
       </div>

@@ -45,11 +45,13 @@ class ViewTrip extends Component {
     this.setState({
       isLoadingData: true,
     });
+
+    let trip = this.props.location.state.trip;
     
-    Http.get(`${this.api}/${this.props.trip}`)
+    Http.get(`${this.api}/${trip}`)
     .then(response => {
       this.setState({
-        trip: response.data.trip
+        trip: response.data[0]
       });
 
       this.setState({
@@ -123,7 +125,8 @@ class ViewTrip extends Component {
   }
 
   render() {
-    const { trips, errorMessage } = this.state;
+    console.log(this.state.trip);
+    const { trip, errorMessage } = this.state;
 
     return (
       <div>
@@ -133,11 +136,8 @@ class ViewTrip extends Component {
 
           <Grid container wrap="nowrap">
           <Grid item xs={10}>
-          <h4 style={{ margin: 0, textAlign: "left" }}> {trip.startingPoint} - {trip.destination} </h4>
+          <h4 style={{ margin: 0, textAlign: "left" }}> {trip.starting_point} - {trip.destination} </h4>
           </Grid>
-            <Grid item xs={2} style={{ align: "right" }}>
-              <Button color="secondary" onClick={() => this.openModal(trip.id)}> Atteikties no brauciena </Button>
-            </Grid>
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
             <ParticipantList trip={trip.id} />
@@ -153,7 +153,7 @@ class ViewTrip extends Component {
               size={50}
               color={"#0066ff"}
           />) : (
-            <CommentList comments={trip.comments} />
+            <CommentList comments={trip.comments} reloadComments={() => this.loadComments(trip.id)}/>
           )}
           <AddComment 
             trip={trip.id} 

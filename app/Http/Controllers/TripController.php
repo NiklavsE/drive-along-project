@@ -28,6 +28,8 @@ class TripController extends Controller
         }
         $trips = Trip::where('route_id', $route_id)
         ->where('passenger_count', '<>', '0')
+        ->whereDate('time', '>=', date('Y-m-d'))
+        ->orderBy('time', 'asc')
         ->get()
         ->toArray();
 

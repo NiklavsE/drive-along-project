@@ -48,4 +48,16 @@ class TripCommentController extends ApiController
             'error' => false
         ]);
     }
+
+    public function destroy(Request $request, $comment_id)
+    {
+        // Get user from $request token.
+        if (!$user = auth()->setRequest($request)->user()) {
+            return $this->responseUnauthorized();
+        }
+
+        $deleted_comment = TripComment::where('id', $comment_id)->delete();
+
+        return response()->json(['errors' => false]);
+    }
 }

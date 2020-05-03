@@ -9,6 +9,8 @@ import NoMatch from "../pages/NoMatch";
 import Trips from "../pages/Trips";
 import MyTrips from "../pages/MyTrips";
 import NewTrip from "../pages/NewTrip";
+import ViewTrip from "../pages/ViewTrip";
+import NewRoute from "../pages/NewRoute";
 
 const routes = [
   {
@@ -68,6 +70,20 @@ const routes = [
     auth: true,
     component: NewTrip,
     fallback: Home
+  },
+  {
+    path: "/user-trip",
+    exact: true,
+    auth: true,
+    component: ViewTrip,
+    fallback: Home,
+  },
+  {
+    path: "/route/new",
+    exact: true,
+    auth: true,
+    component: NewRoute,
+    fallback: Home,
   },
   {
     path: "",

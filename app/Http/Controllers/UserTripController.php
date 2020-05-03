@@ -34,7 +34,9 @@ class UserTripController extends ApiController
 
         // TO-DO write a repository for this
         $user_trip_ids = TripPassenger::where('user_id', $user->id)->pluck('trip_id');
-        $trips = Trip::whereIn('id', $user_trip_ids)->get();
+        $trips = Trip::whereIn('id', $user_trip_ids)
+        ->whereDate('time', '>=', date('Y-m-d'))
+        ->get();
 
         $trip_comments = $this->trip_comment_repository->getMappedTripComments($user_trip_ids);
 
@@ -97,19 +99,29 @@ class UserTripController extends ApiController
         ]);
     }
 
-    public function show($trip_id)
+    public function show(Request $request, $trip_id)
     {
         // Get user from $request token.
         if (!$user = auth()->setRequest($request)->user()) {
         return $this->responseUnauthorized();
         } 
 
-        $trip = Trip::where('id', $trip_id)->get()->toArray();
+        $trip = Trip::where('id', $trip_id)->first();
 
-        $trip_comments = $this->trip_comment_repository->getMappedTripComments($$trip['id']);
+        $driver = User::Where('id', $trip->driver_id)->first();
 
-        return response()->json([
-            'trip' => $trip,
-        ]);
+        $trip_comments = $this->trip_comment_repository->getTripComments($trip_id);
+
+        $trips_array[] = [
+            "starting_point" => $trip->starting_point,
+            "destination" => $trip->destination,
+            "time" => $trip->time,
+            "id" => $trip->id,
+            "passenger_count" => $trip->passenger_count,
+            "driver" => $driver->name . ' ' . $driver->surname,
+            "comments" => $trip_comments,
+        ];
+
+        return response()->json($trips_array);
     }
 }
