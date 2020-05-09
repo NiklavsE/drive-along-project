@@ -117,7 +117,7 @@ class ForgotPassword extends Component {
           <div className="container">
             <div className="row">
               <div className="section-login col-lg-6 ml-auto mr-auto">
-                <h4>Request Password Reset</h4>
+                <h4>Pieprasīt paroles atiestatīšanu</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">
@@ -126,7 +126,7 @@ class ForgotPassword extends Component {
                         className="alert alert-success text-center"
                         role="alert"
                       >
-                        A password reset link has been sent!
+                        Paroles atiestatīšanas saite ir nosūtīta!
                       </div>
                     )}
 
@@ -149,7 +149,7 @@ class ForgotPassword extends Component {
                         }}
                       >
                         <div className="form-group">
-                          <label htmlFor="email">Email Address</label>
+                          <label htmlFor="email">E-pasts</label>
                           <input
                             id="email"
                             type="email"
@@ -178,7 +178,7 @@ class ForgotPassword extends Component {
                               "btn-loading": loading
                             })}
                           >
-                            Send Password Reset Email
+                            Nosūtīt saiti!
                           </button>
                         </div>
                       </form>

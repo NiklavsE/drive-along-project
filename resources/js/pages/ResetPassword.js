@@ -133,7 +133,7 @@ class ResetPassword extends Component {
           <div className="container">
             <div className="row">
               <div className="section-login col-lg-6 ml-auto mr-auto">
-                <h4>Password Reset</h4>
+                <h4>Paroles atiestatīšana</h4>
 
                 <div className="card-login card mb-3">
                   <div className="card-body">
@@ -142,7 +142,7 @@ class ResetPassword extends Component {
                         className="alert alert-success text-center"
                         role="alert"
                       >
-                        Your password has been reset!
+                        Parole veiksmīgi atiestatīta!
                       </div>
                     )}
 
@@ -165,7 +165,7 @@ class ResetPassword extends Component {
                         }}
                       >
                         <div className="form-group">
-                          <label htmlFor="password">Password</label>
+                          <label htmlFor="password">Parole</label>
                           <input
                             id="password"
                             type="password"
@@ -173,7 +173,7 @@ class ResetPassword extends Component {
                               "is-invalid": "password" in errors
                             })}
                             name="password"
-                            placeholder="Enter password"
+                            placeholder="Parole"
                             required
                             onChange={this.handleChange}
                             onBlur={this.handleBlur}
@@ -187,7 +187,7 @@ class ResetPassword extends Component {
 
                         <div className="form-group">
                           <label htmlFor="password_confirmation">
-                            Password Confirmation
+                              Paroles apstiprinājums
                           </label>
                           <input
                             id="password_confirmation"
@@ -196,7 +196,7 @@ class ResetPassword extends Component {
                               "is-invalid": "password_confirmation" in errors
                             })}
                             name="password_confirmation"
-                            placeholder="Confirm password"
+                            placeholder="Paroles apsitiprinājums"
                             required
                             onChange={this.handleChange}
                             onBlur={this.handleBlur}
@@ -215,7 +215,7 @@ class ResetPassword extends Component {
                               "btn-loading": loading
                             })}
                           >
-                            Reset Password
+                            Atiestatīt paroli
                           </button>
                         </div>
                       </form>

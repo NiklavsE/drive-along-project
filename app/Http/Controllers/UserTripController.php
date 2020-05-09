@@ -51,6 +51,7 @@ class UserTripController extends ApiController
                 "passenger_count" => $trip->passenger_count,
                 "driver" => $driver->name . ' ' . $driver->surname,
                 "comments" => isset($trip_comments[$trip->id]) ? $trip_comments[$trip->id] : [],
+                "telephone" => $driver->telephone,
             ];
         }
 

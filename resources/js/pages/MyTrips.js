@@ -65,6 +65,7 @@ class MyTrips extends Component {
             id: trip.id,
             passengerCount: trip.passenger_count,
             driver: trip.driver,
+            telephone: trip.telephone,
             comments: trip.comments,
             participants: trip.participants
           })
@@ -148,6 +149,7 @@ class MyTrips extends Component {
   render() {
     const { trips, errorMessage } = this.state;
     const { classes } = this.props;
+
     return (
       <div>
       {this.state.isLoadingData ? 
@@ -171,6 +173,9 @@ class MyTrips extends Component {
             <Grid item xs={2} style={{ align: "right" }}>
               <Button className={classes.deleteButton} onClick={() => this.openModal(trip.id)}>X Atteikties no brauciena </Button>
             </Grid>
+          </Grid>
+          <Grid justifycontent="left" item xs zeroMinWidth>
+          <h5>Tālrunis saziņai: {trip.telephone}</h5>
           </Grid>
           <Grid justifycontent="left" item xs zeroMinWidth>
             <ParticipantList trip={trip.id} />
