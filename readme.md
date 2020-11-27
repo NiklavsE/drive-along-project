@@ -1,22 +1,3 @@
-# Laravel React To Do App
-
-An example To Do App built with Laravel and React. It includes:
-
-* An auth API, using [tymon/jwt-auth](https://github.com/tymondesigns/jwt-auth) to manage the JSON Web Tokens.
-* Routing with react-router (private, public and split routes).
-* [Feature tests](https://github.com/devinsays/laravel-react-bootstrap/blob/master/docs/automated-testing.md).
-* [Database seeding](https://github.com/devinsays/laravel-react-bootstrap/blob/master/docs/database-seeds.md).
-* A base ApiController to help return [standardized responses](https://github.com/devinsays/laravel-react-bootstrap/blob/master/docs/api-format.md).
-* Bootstrap for styling.
-
-Use it as a base for quick prototypes or to learn from. Suggestions, recommendations, and pull requests welcome!
-
-## Demo Site
-
-View a demo of the app at [laravelreact.com](https://laravelreact.com/).
-
-(Password resets will not be sent from this server. Data will be cleared on a regular basis.)
-
 ## Development Environment
 
 This project runs on a LEMP stack (Linux, NGINX, MySQL, & PHP).
